@@ -53,14 +53,12 @@ Boolean		gIsNetworkHost = false;
 Boolean		gIsNetworkClient = false;
 Boolean		gNetGameInProgress = false;
 
-void* /*NSpGameReference*/	gNetGame = nil;
+NSpGameReference	gNetGame = nil;
 
-#if 0
 static Str31				gameName;
 static Str31				gNetPlayerName;
 static Str31				password;
 static Str31				kJoinDialogLabel = "Choose a Game:";
-#endif
 
 //ListHandle		gTheList;
 //short			gNumRowsInList;
@@ -84,23 +82,17 @@ Boolean		gJoinNetworkGame = false;
 
 void InitNetworkManager(void)
 {
-	IMPLEMENT_ME_SOFT();
-#if 0
-OSStatus    iErr;
+	OSStatus    iErr;
 
-	if ((!gOSX) || OSX_PACKAGE)
-	{
-	            /*********************/
-	            /* INIT NET SPROCKET */
-	            /*********************/
+	/*********************/
+	/* INIT NET SPROCKET */
+	/*********************/
 
-		iErr = NSpInitialize(sizeof(NetHostControlInfoMessageType), kBufferSize, kQElements, kGameID, kTimeout);
-	    if (iErr)
-	        DoFatalAlert("InitNetworkManager: NSpInitialize failed!");
+	iErr = NSpInitialize(sizeof(NetHostControlInfoMessageType), kBufferSize, kQElements, kGameID, kTimeout);
+	if (iErr)
+	    DoFatalAlert("InitNetworkManager: NSpInitialize failed!");
 
-		gNetSprocketInitialized = true;
-	}
-#endif
+	gNetSprocketInitialized = true;
 }
 
 
@@ -111,9 +103,7 @@ OSStatus    iErr;
 
 void EndNetworkGame(void)
 {
-	IMPLEMENT_ME_SOFT();
-#if 0
-OSErr	iErr;
+	OSErr	iErr;
 
 	if ((!gNetGameInProgress) || (!gNetGame))								// only if we're running a net game
 		return;
@@ -122,7 +112,7 @@ OSErr	iErr;
 
 	if (gIsNetworkHost)
 	{
-		Wait(40);						// do this pause to let clients sync up so they don't get the terminate message prematurely
+		// Wait(40);						// do this pause to let clients sync up so they don't get the terminate message prematurely
 		iErr = NSpGame_Dispose(gNetGame, kNSpGameFlag_ForceTerminateGame);	// do not renegotiate a new host
 		if (iErr)
 			DoFatalAlert("EndNetworkGame: NSpGame_Dispose failed!");
@@ -135,8 +125,6 @@ OSErr	iErr;
 		if (iErr)
 			DoFatalAlert("EndNetworkGame: NSpGame_Dispose failed!");
 	}
-#endif
-
 
 	gNetGameInProgress 	= false;
 	gIsNetworkHost	= false;
@@ -159,15 +147,12 @@ OSErr	iErr;
 
 Boolean SetupNetworkHosting(void)
 {
-	IMPLEMENT_ME_SOFT();
-	return true;
-#if 0
-OSStatus 					status;
-Boolean 					okHit;
-NSpProtocolListReference	theList = NULL;
-NSpProtocolReference 		atRef;
+	OSStatus 					status;
+	Boolean 					okHit;
+	NSpProtocolListReference	theList = NULL;
+	// NSpProtocolReference 		atRef;
 
-	GammaOn();
+	//GammaOn();
 	Enter2D(true);
 
 	MyFlushEvents();
@@ -179,11 +164,13 @@ NSpProtocolReference 		atRef;
 
 			/* GET SOME NAMES */
 
+#if 0
 	CopyPString(gPlayerSaveData.playerName, gNetPlayerName);
 	// TODO: this is probably STR_RACE + gGameMode - GAME_MODE_MULTIPLAYERRACE
 	GetIndStringC(gameName, 1000 + gGamePrefs.language, 16 + (gGameMode - GAME_MODE_MULTIPLAYERRACE));	// name of game is game mode string
 
 	password[0] = 0;
+#endif
 
 
 			/* CREATE A PROTOCOL LIST */
@@ -192,11 +179,13 @@ NSpProtocolReference 		atRef;
 	if (status)
 		DoFatalAlert("SetupNetworkHosting: NSpProtocolList_New failed!");
 
+#if 0
 	if (!gOSX)
 	{
 		atRef = NSpProtocol_CreateAppleTalk(gameName,kNBPType, 0,0);		// create appletalk protocol ref
 		NSpProtocolList_Append(theList, atRef);								// append protocol refs
 	}
+#endif
 
 			/* DO HOSTING UI */
 			//
@@ -204,10 +193,10 @@ NSpProtocolReference 		atRef;
 			//
 
 
-	TurnOffISp();
-	InitCursor();
+	//TurnOffISp();
+	//InitCursor();
 	okHit = NSpDoModalHostDialog(theList, gameName, gNetPlayerName, password, nil);
-	TurnOnISp();
+	//TurnOnISp();
 	if (!okHit)
 		goto failure;
 
@@ -238,7 +227,7 @@ NSpProtocolReference 		atRef;
 	if (HostSendGameConfigInfo())
 	    goto failure;
 
-	HideCursor();
+	//HideCursor();
 	return(false);
 
 
@@ -252,14 +241,13 @@ failure:
         gNetGame = nil;
     }
 
-	if (theList != nil)
-		NSpProtocolList_Dispose(theList);
+	//if (theList != nil)
+	//	NSpProtocolList_Dispose(theList);
 
-	HideCursor();
+	//HideCursor();
 
 	Exit2D();
 	return(true);
-#endif
 }
 
 
@@ -353,8 +341,6 @@ int					i;
 
 static OSErr  Host_DoGatherPlayersDialog(void)
 {
- 	IMPLEMENT_ME_SOFT();
-	return unimpErr;
 #if 0
 DialogRef 		myDialog;
 DialogItemType			itemType,itemHit;
@@ -406,19 +392,23 @@ ModalFilterUPP	myProc;
 		}
 	}
 
-		/* STOP ADVERTISING THIS GAME SINCE WE'RE ALL SET TO GO */
+#endif
 
-	NSpGame_EnableAdvertising(gNetGame, nil, false);
+		/* STOP ADVERTISING THIS GAME SINCE WE'RE ALL SET TO GO */
+	Sleep(3000);
+	//NSpGame_EnableAdvertising(gNetGame, nil, false);
 
 
 			/* CLEANUP */
-
+#if 0
 	DisposeModalFilterUPP(myProc);
 	DisposeDialog(myDialog);
 
 	GameScreenToBlack();
 	return(cancelled);
 #endif
+
+	return 0;
 }
 
 
