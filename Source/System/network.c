@@ -4,7 +4,6 @@
 /* By Brian Greenstone      */
 /****************************/
 
-typedef void* NSpMessageHeader;
 typedef void* NSpPlayerLeftMessage;
 
 
