@@ -120,7 +120,7 @@ static const MenuItem gMainMenuTree[] =
 
 	{ .id='netg' },
 	{kMIPick, STR_HOST_NET_GAME, .callback=OnPickHostOrJoin, .id=0, .next='mpgm' }, // host gets to select game type
-	{kMIPick, STR_JOIN_NET_GAME, .callback=OnPickHostOrJoin, .id=1 },
+	{kMIPick, STR_JOIN_NET_GAME, .callback=OnPickHostOrJoin, .id=1, .next='EXIT' },
 
 	{ .id='clrs' },
 	{kMILabel, .text=STR_CLEAR_SAVED_GAME_TEXT_1 },

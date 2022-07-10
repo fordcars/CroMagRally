@@ -259,20 +259,17 @@ failure:
 
 Boolean SetupNetworkJoin(void)
 {
-	IMPLEMENT_ME_SOFT();
-	return true;
-#if 0
-NSpAddressReference	theAddress;
-OSStatus			status;
-int					i;
+	NSpAddressReference	theAddress;
+	OSStatus			status;
+	int					i;
 
 
-//	GameScreenToBlack();
-	GammaOn();
+	//GameScreenToBlack();
+	//GammaOn();
 	Enter2D(true);
 
 	MyFlushEvents();
-	InitCursor();
+	//InitCursor();
 
 	gNetGame = nil;
 
@@ -280,7 +277,7 @@ int					i;
 		gClientSendCounter[i] = 0;
 	gTimeoutCounter = 0;
 
-	CopyPString(gPlayerSaveData.playerName, gNetPlayerName);		// use loaded player's name
+	//CopyPString(gPlayerSaveData.playerName, gNetPlayerName);		// use loaded player's name
 	password[0] = 0;
 
 			/* DO UI FOR JOINING GAME */
@@ -288,23 +285,23 @@ int					i;
 			//	passing an empty string (not nil) for the type causes NetSprocket to use the game id passed in to initialize
 			//
 
-	TurnOffISp();
+	//TurnOffISp();
 	theAddress = NSpDoModalJoinDialog(kNBPType, kJoinDialogLabel, gNetPlayerName, password, NULL);
-	TurnOnISp();
+	//TurnOnISp();
 
 	if (theAddress == NULL)		// The user cancelled
 	{
-		HideCursor();
+		//HideCursor();
 		return(true);
 	}
 
 
 				/* JOIN IN */
 
-	status = NSpGame_Join(&gNetGame, theAddress, gNetPlayerName, password, 0, NULL, 0, 0);
+	status = NSpGame_Join(&gNetGame, theAddress, gNetPlayerName, password, 0, 0, 0, 0);
 	if (status)
 	{
-		HideCursor();
+		//HideCursor();
 		return(true);												// an error will occur if user selects "blank" line in dialog above (sounds like an NSp bug to me!)
 	}
 
@@ -323,10 +320,9 @@ int					i;
         }
 	}
 
-	HideCursor();
+	//HideCursor();
 	Exit2D();
 	return status;
-#endif
 }
 
 
