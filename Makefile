@@ -57,7 +57,7 @@ CXXFLAGS	:= $(CFLAGS) -fexceptions -std=gnu++2a
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= `$(PREFIX)pkg-config sdl --libs` -lctru -lm -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib -lpicaGL
+LIBS	:= `$(PREFIX)pkg-config sdl --libs` -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib -lpicaGL -lctru -lm 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

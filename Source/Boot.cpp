@@ -46,6 +46,7 @@ static fs::path FindGameData(const char* executablePath)
 	if (!executablePath)
 		attemptNum = 2;
 
+#ifndef __3DS__
 tryAgain:
 	switch (attemptNum)
 	{
@@ -70,6 +71,9 @@ tryAgain:
 	attemptNum++;
 
 	dataPath = dataPath.lexically_normal();
+#elif defined __3DS__
+	dataPath = "romfs:";
+#endif
 
 	// Set data spec -- Lets the game know where to find its asset files
 	gDataSpec = Pomme::Files::HostPathToFSSpec(dataPath / "Skeletons");
@@ -78,7 +82,11 @@ tryAgain:
 	OSErr iErr = FSMakeFSSpec(gDataSpec.vRefNum, gDataSpec.parID, ":Skeletons:Brog.bg3d", &someDataFileSpec);
 	if (iErr)
 	{
+#ifdef __3DS__
+	throw std::runtime_error(std::string(gDataSpec.cName));
+#else
 		goto tryAgain;
+#endif
 	}
 
 	return dataPath;
@@ -167,7 +175,9 @@ static void Boot(int argc, char** argv)
 
 	// Load game prefs before starting
 	InitDefaultPrefs();
+#ifndef __3DS__
 	LoadPrefs();
+#endif
 
 #ifndef __3DS__
 	retryVideo:
@@ -301,6 +311,6 @@ int main(int argc, char** argv)
 		std::cerr << "Uncaught exception: " << finalErrorMessage << std::endl;
 #endif
 	}
-
+while(true){} // CARL
 	return returnCode;
 }
