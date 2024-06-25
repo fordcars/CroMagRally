@@ -5,10 +5,13 @@
 #include "game.h"
 #include <SDL.h>
 
+#ifndef __3DS__
 extern SDL_Window* gSDLWindow;
+#endif
 
 // Provide GameController stubs for CI runners that have old SDL packages.
 // This lets us run quick compile checks on the CI without recompiling SDL.
+#ifndef __3DS__
 #if !(SDL_VERSION_ATLEAST(2,0,12))
 	#warning "Multiplayer controller support requires SDL 2.0.12 or later. The game will compile but controllers won't work!"
 	static void SDL_GameControllerSetPlayerIndex(SDL_GameController *c, int i) {}
@@ -16,6 +19,7 @@ extern SDL_Window* gSDLWindow;
 	#if !(SDL_VERSION_ATLEAST(2,0,9))
 		static int SDL_GameControllerGetPlayerIndex(SDL_GameController *c) { return 0; }
 	#endif
+#endif
 #endif
 
 /***************/
@@ -48,8 +52,10 @@ typedef struct Controller
 {
 	bool					open;
 	bool					fallbackToKeyboard;
+#ifndef __3DS__
 	SDL_GameController*		controllerInstance;
 	SDL_JoystickID			joystickInstance;
+#endif
 	KeyState				needStates[NUM_CONTROL_NEEDS];
 	float					needAnalog[NUM_CONTROL_NEEDS];
 	float					needAnalogRaw[NUM_CONTROL_NEEDS];
@@ -60,17 +66,23 @@ Boolean				gUserPrefersGamepad = false;
 static Boolean		gControllerPlayerMappingLocked = false;
 Controller			gControllers[MAX_LOCAL_PLAYERS];
 
+#ifndef __3DS__
 static KeyState		gKeyboardStates[SDL_NUM_SCANCODES];
+#endif
 static KeyState		gMouseButtonStates[NUM_SUPPORTED_MOUSE_BUTTONS];
 static KeyState		gNeedStates[NUM_CONTROL_NEEDS];
 
 Boolean				gMouseMotionNow = false;
+#ifndef __3DS__
 char				gTextInput[SDL_TEXTINPUTEVENT_TEXT_SIZE];
+#endif
 
+#ifndef __3DS__
 static void OnJoystickRemoved(SDL_JoystickID which);
 static SDL_GameController* TryOpenControllerFromJoystick(int joystickIndex);
 static SDL_GameController* TryOpenAnyController(bool showMessage);
 static int GetControllerSlotFromSDLJoystickInstanceID(SDL_JoystickID joystickInstanceID);
+#endif
 
 #pragma mark -
 /**********************/
@@ -103,6 +115,7 @@ void InvalidateNeedState(int need)
 
 void InvalidateAllInputs(void)
 {
+#ifndef __3DS__
 	_Static_assert(1 == sizeof(KeyState), "sizeof(KeyState) has changed -- Rewrite this function without memset()!");
 
 	memset(gNeedStates, KEYSTATE_IGNOREHELD, NUM_CONTROL_NEEDS);
@@ -113,11 +126,12 @@ void InvalidateAllInputs(void)
 	{
 		memset(gControllers[i].needStates, KEYSTATE_IGNOREHELD, NUM_CONTROL_NEEDS);
 	}
-
+#endif
 }
 
 static void UpdateRawKeyboardStates(void)
 {
+#ifndef __3DS__
 	int numkeys = 0;
 	const UInt8* keystate = SDL_GetKeyboardState(&numkeys);
 
@@ -129,10 +143,12 @@ static void UpdateRawKeyboardStates(void)
 	// fill out the rest
 	for (int i = minNumKeys; i < SDL_NUM_SCANCODES; i++)
 		UpdateKeyState(&gKeyboardStates[i], false);
+#endif
 }
 
 static void ParseAltEnter(void)
 {
+#ifndef __3DS__
 	if (GetNewKeyState(SDL_SCANCODE_RETURN)
 		&& (GetKeyState(SDL_SCANCODE_LALT) || GetKeyState(SDL_SCANCODE_RALT)))
 	{
@@ -141,11 +157,12 @@ static void ParseAltEnter(void)
 
 		InvalidateAllInputs();
 	}
-
+#endif
 }
 
 static void UpdateMouseButtonStates(int mouseWheelDelta)
 {
+#ifndef __3DS__
 	uint32_t mouseButtons = SDL_GetMouseState(NULL, NULL);
 
 	for (int i = 1; i < NUM_SUPPORTED_MOUSE_BUTTONS_PURESDL; i++)	// SDL buttons start at 1!
@@ -157,10 +174,12 @@ static void UpdateMouseButtonStates(int mouseWheelDelta)
 	// Fake buttons for mouse wheel up/down
 	UpdateKeyState(&gMouseButtonStates[SDL_BUTTON_WHEELUP], mouseWheelDelta > 0);
 	UpdateKeyState(&gMouseButtonStates[SDL_BUTTON_WHEELDOWN], mouseWheelDelta < 0);
+#endif
 }
 
 static void UpdateInputNeeds(void)
 {
+#ifndef __3DS__
 	for (int i = 0; i < NUM_CONTROL_NEEDS; i++)
 	{
 		const InputBinding* kb = &gGamePrefs.bindings[i];
@@ -180,10 +199,12 @@ static void UpdateInputNeeds(void)
 
 		UpdateKeyState(&gNeedStates[i], downNow);
 	}
+#endif
 }
 
 static void UpdateControllerSpecificInputNeeds(int controllerNum)
 {
+#ifndef __3DS__
 	Controller* controller = &gControllers[controllerNum];
 
 	if (!controller->open)
@@ -247,6 +268,7 @@ static void UpdateControllerSpecificInputNeeds(int controllerNum)
 
 		UpdateKeyState(&controller->needStates[needNum], pressed);
 	}
+#endif
 }
 
 #pragma mark -
@@ -257,6 +279,7 @@ static void UpdateControllerSpecificInputNeeds(int controllerNum)
 
 void DoSDLMaintenance(void)
 {
+#ifndef __3DS__
 	gTextInput[0] = '\0';
 	gMouseMotionNow = false;
 	int mouseWheelDelta = 0;
@@ -331,7 +354,7 @@ void DoSDLMaintenance(void)
 					break;
 		}
 	}
-
+#endif
 
 	// Refresh the state of each individual keyboard key
 	UpdateRawKeyboardStates();
@@ -340,7 +363,9 @@ void DoSDLMaintenance(void)
 	ParseAltEnter();
 
 	// Refresh the state of each mouse button
+#ifndef __3DS__
 	UpdateMouseButtonStates(mouseWheelDelta);
+#endif
 
 	// Refresh the state of each input need
 	UpdateInputNeeds();
@@ -369,38 +394,55 @@ void DoSDLMaintenance(void)
 
 Boolean GetKeyState(uint16_t sdlScancode)
 {
+#ifndef __3DS__
 	if (sdlScancode >= SDL_NUM_SCANCODES)
 		return false;
 	return 0 != (gKeyboardStates[sdlScancode] & KEYSTATE_ACTIVE_BIT);
+#else
+	return false;
+#endif
 }
 
 Boolean GetNewKeyState(uint16_t sdlScancode)
 {
+#ifndef __3DS__
 	if (sdlScancode >= SDL_NUM_SCANCODES)
 		return false;
 	return gKeyboardStates[sdlScancode] == KEYSTATE_PRESSED;
+#else
+	return false;
+#endif
 }
 
 #pragma mark -
 
 Boolean GetClickState(int mouseButton)
 {
+#ifndef __3DS__
 	if (mouseButton >= NUM_SUPPORTED_MOUSE_BUTTONS)
 		return false;
 	return 0 != (gMouseButtonStates[mouseButton] & KEYSTATE_ACTIVE_BIT);
+#else
+	return false;
+#endif
 }
 
 Boolean GetNewClickState(int mouseButton)
 {
+#ifndef __3DS__
 	if (mouseButton >= NUM_SUPPORTED_MOUSE_BUTTONS)
 		return false;
 	return gMouseButtonStates[mouseButton] == KEYSTATE_PRESSED;
+#else
+	return false;
+#endif
 }
 
 #pragma mark -
 
 Boolean GetNeedState(int needID, int playerID)
 {
+#ifndef __3DS__
 	const Controller* controller = &gControllers[playerID];
 
 	GAME_ASSERT(playerID >= 0);
@@ -419,11 +461,13 @@ Boolean GetNeedState(int needID, int playerID)
 		return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
 	}
 
+#endif
 	return false;
 }
 
 Boolean GetNeedStateAnyP(int needID)
 {
+#ifndef __3DS__
 	for (int i = 0; i < MAX_LOCAL_PLAYERS; i++)
 	{
 		if (gControllers[i].open
@@ -435,10 +479,14 @@ Boolean GetNeedStateAnyP(int needID)
 
 	// Fallback to KB/M
 	return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
+#else
+	return false;
+#endif
 }
 
 Boolean GetNewNeedState(int needID, int playerID)
 {
+#ifndef __3DS__
 	const Controller* controller = &gControllers[playerID];
 
 	GAME_ASSERT(playerID >= 0);
@@ -458,10 +506,14 @@ Boolean GetNewNeedState(int needID, int playerID)
 	}
 
 	return false;
+#else
+	return false;
+#endif
 }
 
 Boolean GetNewNeedStateAnyP(int needID)
 {
+#ifndef __3DS__
 	for (int i = 0; i < MAX_LOCAL_PLAYERS; i++)
 	{
 		if (gControllers[i].open
@@ -473,10 +525,14 @@ Boolean GetNewNeedStateAnyP(int needID)
 
 	// Fallback to KB/M
 	return gNeedStates[needID] == KEYSTATE_PRESSED;
+#else
+	return false;
+#endif
 }
 
 static float GetAnalogValue(int needID, bool raw, int playerID)
 {
+#ifndef __3DS__
 	GAME_ASSERT(playerID >= 0);
 	GAME_ASSERT(playerID < MAX_LOCAL_PLAYERS);
 	GAME_ASSERT(needID >= 0);
@@ -513,10 +569,14 @@ static float GetAnalogValue(int needID, bool raw, int playerID)
 	}
 
 	return 0;
+#else
+	return false;
+#endif
 }
 
 float GetNeedAxis1D(int negativeNeedID, int positiveNeedID, int playerID)
 {
+#ifndef __3DS__
 	float neg = GetAnalogValue(negativeNeedID, false, playerID);
 	float pos = GetAnalogValue(positiveNeedID, false, playerID);
 
@@ -528,6 +588,9 @@ float GetNeedAxis1D(int negativeNeedID, int positiveNeedID, int playerID)
 	{
 		return pos;
 	}
+#else
+	return false;
+#endif
 }
 
 #if 0
@@ -581,10 +644,14 @@ Boolean IsCmdQPressed(void)
 
 Boolean IsCheatKeyComboDown(void)
 {
+#ifndef __3DS__
 	// The original Mac version used B-R-I, but some cheap PC keyboards can't register
 	// this particular key combo, so C-M-R is available as an alternative.
 	return (GetKeyState(SDL_SCANCODE_B) && GetKeyState(SDL_SCANCODE_R) && GetKeyState(SDL_SCANCODE_I))
 		|| (GetKeyState(SDL_SCANCODE_C) && GetKeyState(SDL_SCANCODE_M) && GetKeyState(SDL_SCANCODE_R));
+#else
+	return false;
+#endif
 }
 
 #pragma mark -
@@ -627,6 +694,7 @@ int GetNumControllers(void)
 	return count;
 }
 
+#ifndef __3DS__
 SDL_GameController* GetController(int n)
 {
 	if (gControllers[n].open)
@@ -638,6 +706,7 @@ SDL_GameController* GetController(int n)
 		return NULL;
 	}
 }
+#endif
 
 static int FindFreeControllerSlot()
 {
@@ -654,6 +723,7 @@ static int FindFreeControllerSlot()
 
 static int GetControllerSlotFromJoystick(int joystickIndex)
 {
+#ifndef __3DS__
 	SDL_JoystickID joystickInstanceID = SDL_JoystickGetDeviceInstanceID(joystickIndex);
 
 	for (int controllerSlot = 0; controllerSlot < MAX_LOCAL_PLAYERS; controllerSlot++)
@@ -664,10 +734,11 @@ static int GetControllerSlotFromJoystick(int joystickIndex)
 			return controllerSlot;
 		}
 	}
-
+#endif
 	return -1;
 }
 
+#ifndef __3DS__
 static SDL_GameController* TryOpenControllerFromJoystick(int joystickIndex)
 {
 	int controllerSlot = -1;
@@ -770,6 +841,7 @@ static SDL_GameController* TryOpenAnyUnusedController(bool showMessage)
 
 	return NULL;
 }
+#endif
 
 void Rumble(float strength, uint32_t ms)
 {
@@ -784,7 +856,7 @@ void Rumble(float strength, uint32_t ms)
 #endif
 	#endif
 }
-
+#ifndef __3DS__
 static int GetControllerSlotFromSDLJoystickInstanceID(SDL_JoystickID joystickInstanceID)
 {
 	for (int i = 0; i < MAX_LOCAL_PLAYERS; i++)
@@ -797,9 +869,11 @@ static int GetControllerSlotFromSDLJoystickInstanceID(SDL_JoystickID joystickIns
 
 	return -1;
 }
+#endif
 
 static void CloseController(int controllerSlot)
 {
+#ifndef __3DS__
 	GAME_ASSERT(gControllers[controllerSlot].open);
 	GAME_ASSERT(gControllers[controllerSlot].controllerInstance);
 
@@ -807,10 +881,12 @@ static void CloseController(int controllerSlot)
 	gControllers[controllerSlot].open = false;
 	gControllers[controllerSlot].controllerInstance = NULL;
 	gControllers[controllerSlot].joystickInstance = -1;
+#endif
 }
 
 static void MoveController(int oldSlot, int newSlot)
 {
+#ifndef __3DS__
 	if (oldSlot == newSlot)
 		return;
 
@@ -828,6 +904,7 @@ static void MoveController(int oldSlot, int newSlot)
 	gControllers[oldSlot].controllerInstance = NULL;
 	gControllers[oldSlot].joystickInstance = -1;
 	gControllers[oldSlot].open = false;
+#endif
 }
 
 static void CompactControllerSlots(void)
@@ -848,12 +925,15 @@ static void CompactControllerSlots(void)
 
 static void TryFillUpVacantControllerSlots(void)
 {
+#ifndef __3DS__
 	while (TryOpenAnyUnusedController(false) != NULL)
 	{
 		// Successful; there might be more joysticks available, keep going
 	}
+#endif
 }
 
+#ifndef __3DS__
 static void OnJoystickRemoved(SDL_JoystickID joystickInstanceID)
 {
 	int controllerSlot = GetControllerSlotFromSDLJoystickInstanceID(joystickInstanceID);
@@ -874,6 +954,7 @@ static void OnJoystickRemoved(SDL_JoystickID joystickInstanceID)
 	// Fill up any controller slots that are vacant
 	TryFillUpVacantControllerSlots();
 }
+#endif
 
 void LockPlayerControllerMapping(void)
 {

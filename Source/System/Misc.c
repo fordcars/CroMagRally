@@ -16,7 +16,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#ifndef __3DS__
 extern	SDL_Window* 	gSDLWindow;
+#endif
 
 
 /****************************/
@@ -58,7 +60,9 @@ void DoAlert(const char* format, ...)
 	va_end(args);
 
 	printf("CMR Alert: %s\n", message);
+#ifndef __3DS__
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cro-Mag Rally", message, NULL);
+#endif
 
 	Exit2D();
 }
@@ -77,7 +81,9 @@ void DoFatalAlert(const char* format, ...)
 	va_end(args);
 
 	printf("CMR Fatal Alert: %s\n", message);
+#ifndef __3DS__
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cro-Mag Rally", message, NULL);//gSDLWindow);
+#endif
 
 	Exit2D();
 	CleanQuit();

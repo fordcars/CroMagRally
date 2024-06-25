@@ -226,7 +226,7 @@ static int DoLocalGatherControls(void)
 	}
 
 		/* SEE IF SELECT THIS ONE */
-
+#ifndef __3DS__
 	if (GetNewKeyState(SDL_SCANCODE_RETURN) || GetNewKeyState(SDL_SCANCODE_KP_ENTER))
 	{
 		// User pressed [ENTER] on keyboard
@@ -241,7 +241,9 @@ static int DoLocalGatherControls(void)
 			MakeTwitch(gGatherPrompt, kTwitchPreset_PadlockWiggle);
 		}
 	}
-	else if (GetNewNeedStateAnyP(kNeed_UIConfirm))
+	else
+#endif
+	if (GetNewNeedStateAnyP(kNeed_UIConfirm))
 	{
 		// User pressed [A] on gamepad
 		if (gNumControllersMissing > 0)

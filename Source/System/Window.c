@@ -14,7 +14,9 @@
 #include <SDL.h>
 #include <stdlib.h>
 
+#ifndef __3DS__
 extern SDL_Window* gSDLWindow;
+#endif
 
 /****************************/
 /*    PROTOTYPES            */
@@ -257,6 +259,7 @@ void Exit2D(void)
 
 static void MoveToPreferredDisplay(void)
 {
+#ifndef __3DS__
 	int currentDisplay = SDL_GetWindowDisplayIndex(gSDLWindow);
 
 	if (currentDisplay != gGamePrefs.monitorNum)
@@ -266,12 +269,14 @@ static void MoveToPreferredDisplay(void)
 			SDL_WINDOWPOS_CENTERED_DISPLAY(gGamePrefs.monitorNum),
 			SDL_WINDOWPOS_CENTERED_DISPLAY(gGamePrefs.monitorNum));
 	}
+#endif
 }
 
 /*********************** SET FULLSCREEN MODE **********************/
 
 void SetFullscreenMode(bool enforceDisplayPref)
 {
+#ifndef __3DS__
 	if (!gGamePrefs.fullscreen)
 	{
 		SDL_SetWindowFullscreen(gSDLWindow, 0);
@@ -305,4 +310,5 @@ void SetFullscreenMode(bool enforceDisplayPref)
 //	QD3D_OnWindowResized(width, height);
 
 	SDL_ShowCursor(gGamePrefs.fullscreen ? 0 : 1);
+#endif
 }

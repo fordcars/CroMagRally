@@ -165,8 +165,10 @@ typedef struct
 
 	bool				mouseHoverValid;
 //	int					mouseHoverColumn;
+#ifndef __3DS__
 	SDL_Cursor*			handCursor;
 	SDL_Cursor*			standardCursor;
+#endif
 
 	float				idleTime;
 
@@ -197,8 +199,10 @@ static void InitMenuNavigation(void)
 	nav->menuState = kMenuStateOff;
 //	nav->mouseHoverColumn = -1;
 
+#ifndef __3DS__
 	nav->standardCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 	nav->handCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+#endif
 
 	NewObjectDefinitionType arrowDef =
 	{
@@ -216,7 +220,7 @@ static void InitMenuNavigation(void)
 static void DisposeMenuNavigation(void)
 {
 	MenuNavigation* nav = gNav;
-
+#ifndef __3DS__
 	for (int i = 0; i < 2; i++)
 	{
 		if (nav->arrowObjects[i] != NULL)
@@ -237,7 +241,7 @@ static void DisposeMenuNavigation(void)
 		SDL_FreeCursor(nav->handCursor);
 		nav->handCursor = NULL;
 	}
-
+#endif
 	SafeDisposePtr((Ptr) nav);
 
 	gNav = nil;
@@ -264,20 +268,24 @@ void KillMenu(int returnCode)
 
 static void SetStandardMouseCursor(void)
 {
+#ifndef __3DS__
 	if (gNav->standardCursor != NULL &&
 		gNav->standardCursor != SDL_GetCursor())
 	{
 		SDL_SetCursor(gNav->standardCursor);
 	}
+#endif
 }
 
 static void SetHandMouseCursor(void)
 {
+#ifndef __3DS__
 	if (gNav->handCursor != NULL &&
 		gNav->handCursor != SDL_GetCursor())
 	{
 		SDL_SetCursor(gNav->handCursor);
 	}
+#endif
 }
 
 ObjNode* GetCurrentMenuItemObject(void)
@@ -326,6 +334,7 @@ static InputBinding* GetBindingAtRow(int row)
 
 static const char* GetKeyBindingName(int row, int col)
 {
+#ifndef __3DS__
 	int16_t scancode = GetBindingAtRow(row)->key[col];
 
 	switch (scancode)
@@ -337,10 +346,14 @@ static const char* GetKeyBindingName(int row, int col)
 		case SDL_SCANCODE_SEMICOLON:		return "Semicolon";
 		default:							return SDL_GetScancodeName(scancode);
 	}
+#else
+	return "";
+#endif
 }
 
 static const char* GetPadBindingName(int row, int col)
 {
+#ifndef __3DS__
 	const PadBinding* pb = &GetBindingAtRow(row)->pad[col];
 
 	switch (pb->type)
@@ -402,6 +415,9 @@ static const char* GetPadBindingName(int row, int col)
 		default:
 			return "???";
 	}
+#else
+	return "3DS Gamepad";
+#endif
 }
 
 static const char* GetMouseBindingName(int row)
@@ -1190,7 +1206,7 @@ static void NavigateKeyBinding(const MenuItem* entry)
 		RepositionArrows();
 		return;
 	}
-
+#ifndef __3DS__
 	if (GetNewNeedStateAnyP(kNeed_UIRight) || GetNewNeedStateAnyP(kNeed_UINext))
 	{
 		TwitchOutSelection();
@@ -1235,6 +1251,7 @@ static void NavigateKeyBinding(const MenuItem* entry)
 		ReplaceMenuText(STR_CONFIGURE_KEYBOARD_HELP, STR_CONFIGURE_KEYBOARD_HELP_CANCEL);
 		return;
 	}
+#endif
 }
 
 static void NavigatePadBinding(const MenuItem* entry)
@@ -1248,6 +1265,7 @@ static void NavigatePadBinding(const MenuItem* entry)
 		gNav->padColumn = gNav->mouseHoverColumn - 1;
 #endif
 
+#ifndef __3DS__
 	if (GetNewNeedStateAnyP(kNeed_UILeft) || GetNewNeedStateAnyP(kNeed_UIPrev))
 	{
 		TwitchOutSelection();
@@ -1286,7 +1304,6 @@ static void NavigatePadBinding(const MenuItem* entry)
 		TwitchSelection();
 		return;
 	}
-
 	if (GetNewNeedStateAnyP(kNeed_UIConfirm)
 		|| GetNewKeyState(SDL_SCANCODE_KP_ENTER)
 		|| (gNav->mouseHoverValid && GetNewClickState(SDL_BUTTON_LEFT)))
@@ -1310,6 +1327,7 @@ static void NavigatePadBinding(const MenuItem* entry)
 
 		return;
 	}
+#endif
 }
 
 static void NavigateMouseBinding(const MenuItem* entry)
@@ -1442,7 +1460,7 @@ static void AwaitKeyPress(void)
 	int keyNo = gNav->menuCol;
 	GAME_ASSERT(keyNo >= 0);
 	GAME_ASSERT(keyNo < MAX_USER_BINDINGS_PER_NEED);
-
+#ifndef __3DS__
 	if (GetNewKeyState(SDL_SCANCODE_ESCAPE))
 	{
 		PlayEffect(kSfxError);
@@ -1460,6 +1478,7 @@ static void AwaitKeyPress(void)
 			goto updateText;
 		}
 	}
+#endif
 	return;
 
 updateText:
@@ -1470,6 +1489,7 @@ updateText:
 	ReplaceMenuText(STR_CONFIGURE_KEYBOARD_HELP, STR_CONFIGURE_KEYBOARD_HELP);
 }
 
+#ifndef __3DS__
 static bool AwaitGamepadPress(SDL_GameController* controller)
 {
 	int row = gNav->menuRow;
@@ -1483,6 +1503,7 @@ static bool AwaitGamepadPress(SDL_GameController* controller)
 		PlayEffect(kSfxError);
 		goto updateText;
 	}
+
 
 	InputBinding* binding = GetBindingAtRow(gNav->menuRow);
 
@@ -1522,9 +1543,11 @@ updateText:
 	ReplaceMenuText(STR_CONFIGURE_GAMEPAD_HELP_CANCEL, STR_CONFIGURE_GAMEPAD_HELP);
 	return true;
 }
+#endif
 
 static void AwaitMetaGamepadPress(void)
 {
+#ifndef __3DS__
 	// Wait for user to let go of confirm button before accepting a new button binding.
 	if (GetNeedStateAnyP(kNeed_UIConfirm) && !GetNewNeedStateAnyP(kNeed_UIConfirm))
 	{
@@ -1555,10 +1578,12 @@ static void AwaitMetaGamepadPress(void)
 		PlayEffect(kSfxError);
 		ReplaceMenuText(STR_CONFIGURE_GAMEPAD_HELP, STR_NO_GAMEPAD_DETECTED);
 	}
+#endif
 }
 
 static void AwaitMouseClick(void)
 {
+#ifndef __3DS__
 	if (GetNewKeyState(SDL_SCANCODE_ESCAPE))
 	{
 		MakeText(GetMouseBindingName(gNav->menuRow), gNav->menuRow, 1, 0);
@@ -1567,6 +1592,7 @@ static void AwaitMouseClick(void)
 		PlayEffect(kSfxError);
 		return;
 	}
+#endif
 
 	InputBinding* binding = GetBindingAtRow(gNav->menuRow);
 

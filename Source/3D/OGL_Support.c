@@ -17,7 +17,13 @@
 #include <GL/gl.h>
 #include <math.h>
 
+#ifdef __3DS__
+#include "Platform/3ds/Pomme3ds.h"
+#endif
+
+#ifndef __3DS__
 extern SDL_Window*		gSDLWindow;
+#endif
 //extern	GWorldPtr		gTerrainDebugGWorld;
 
 _Static_assert(sizeof(OGLColorBGRA16) == 2, "OGLColorBGRA16 must fit on 2 bytes");
@@ -29,8 +35,10 @@ _Static_assert(sizeof(OGLColorBGRA16) == 2, "OGLColorBGRA16 must fit on 2 bytes"
 
 static void InitDebugText(void);
 
+#ifndef __3DS__
 static void OGL_CreateDrawContext(void);
 static void OGL_DisposeDrawContext(void);
+#endif
 static void OGL_InitDrawContext(void);
 static void OGL_SetStyles(OGLSetupInputType *setupDefPtr);
 static void OGL_CreateLights(OGLLightDefType *lightDefPtr);
@@ -50,9 +58,9 @@ static void OGL_UpdatePaneDimensions(Byte whichPane);
 /*********************/
 /*    VARIABLES      */
 /*********************/
-
+#ifndef __3DS__
 SDL_GLContext	gAGLContext = nil;
-
+#endif
 
 //OGLMatrix4x4	gViewToFrustumMatrix,gWorldToViewMatrix,gWorldToFrustumMatrix;
 OGLMatrix4x4	gViewToFrustumMatrix,gLocalToViewMatrix,gLocalToFrustumMatrix;
@@ -100,8 +108,10 @@ int			gNumTexturesAllocated = 0;
 
 void OGL_Boot(void)
 {
+#ifndef __3DS__
 	OGL_CreateDrawContext();
 	OGL_CheckError();
+#endif
 
 	OGL_InitDrawContext();
 	OGL_CheckError();
@@ -143,7 +153,9 @@ void OGL_Boot(void)
 
 void OGL_Shutdown(void)
 {
+#ifndef __3DS__
 	OGL_DisposeDrawContext();
+#endif
 }
 
 
@@ -251,8 +263,9 @@ void OGL_SetupGameView(OGLSetupInputType *setupDefPtr)
 
 
 				/* UPDATE WINDOW SIZE */
-
+#ifndef __3DS__
 	SDL_GL_GetDrawableSize(gSDLWindow, &gGameWindowWidth, &gGameWindowHeight);
+#endif
 
 
 				/* SETUP */
@@ -272,7 +285,9 @@ void OGL_SetupGameView(OGLSetupInputType *setupDefPtr)
 	OGL_CreateLights(&setupDefPtr->lights);
 	OGL_CheckError();
 
+#ifndef __3DS__
 	SDL_GL_SetSwapInterval(1);//gCommandLine.vsync);
+#endif
 
 
 
@@ -343,6 +358,7 @@ void OGL_DisposeGameView(void)
 // but we keep one DC throughout the lifetime of the program.
 //
 
+#ifndef __3DS__
 static void OGL_CreateDrawContext(void)
 {
 	GAME_ASSERT_MESSAGE(gSDLWindow, "Window must be created before the DC!");
@@ -373,10 +389,11 @@ static void OGL_CreateDrawContext(void)
 	OGL_InitFunctions();
 #endif
 }
-
+#endif // __3DS__
 
 /**************** OGL: DISPOSE DRAW CONTEXT *********************/
 
+#ifndef __3DS__
 static void OGL_DisposeDrawContext(void)
 {
 	if (!gAGLContext)
@@ -387,6 +404,7 @@ static void OGL_DisposeDrawContext(void)
 
 	gAGLContext = nil;
 }
+#endif
 
 /**************** OGL: INIT DRAW CONTEXT *********************/
 //
@@ -539,10 +557,16 @@ GLfloat	ambient[4];
 void OGL_DrawScene(void (*drawRoutine)(void))
 {
 	GAME_ASSERT(gGameView);										// make sure it's legit
-
+#ifndef __3DS__
 	int makeCurrentRC = SDL_GL_MakeCurrent(gSDLWindow, gAGLContext);		// make context active
 	if (makeCurrentRC != 0)
 		DoFatalAlert(SDL_GetError());
+#endif
+
+#ifdef __3DS__
+	// Not sure about this
+	WaitForVBlank3ds();
+#endif
 
 
 #if 0
@@ -557,8 +581,9 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 
 
 			/* UPDATE WINDOW SIZE ONCE PER FRAME */
-
+#ifndef __3DS__
 	SDL_GL_GetDrawableSize(gSDLWindow, &gGameWindowWidth, &gGameWindowHeight);
+#endif
 
 
 			/* INIT SOME STUFF */
@@ -631,7 +656,7 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 		/**************************/
 		/* SEE IF SHOW DEBUG INFO */
 		/**************************/
-
+#ifndef __3DS__
 	if (GetNewKeyState(SDL_SCANCODE_F8))
 	{
 		if (++gDebugMode > 3)
@@ -642,6 +667,7 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 		else
 			glPolygonMode(GL_FRONT_AND_BACK ,GL_FILL);
 	}
+#endif
 
 
             /**************/
@@ -649,8 +675,11 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 			/**************/
 
            /* SWAP THE BUFFS */
-
+#ifndef __3DS__
 	SDL_GL_SwapWindow(gSDLWindow);					// end render loop
+#elif defined __3DS__
+	SwapBuffers3ds();
+#endif
 }
 
 
@@ -1223,11 +1252,18 @@ int	i;
 	gStateStack_Blend[i] 	= glIsEnabled(GL_BLEND);
 	gStateStack_ProjectionType[i] = gMyState_ProjectionType;
 
+// TODO: May cause graphical glitches on 3DS, to verify.
+#ifndef __3DS__
 	glGetFloatv(GL_CURRENT_COLOR, &gStateStack_Color[i][0]);
+#endif
 
 	glGetIntegerv(GL_BLEND_SRC, &gStateStack_BlendSrc[i]);
 	glGetIntegerv(GL_BLEND_DST, &gStateStack_BlendDst[i]);
+
+// TODO: May cause graphical glitches on 3DS, to verify.
+#ifndef __3DS__
 	glGetBooleanv(GL_DEPTH_WRITEMASK, &gStateStack_DepthMask[i]);
+#endif
 }
 
 

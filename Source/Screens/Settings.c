@@ -46,7 +46,11 @@ static void OnPickResetGamepadBindings(const MenuItem* mi)
 
 static int GetNumDisplays(void)
 {
+#ifndef __3DS__
 	return SDL_GetNumVideoDisplays();
+#else
+	return 1;
+#endif
 }
 
 static const char* GetDisplayName(Byte value)

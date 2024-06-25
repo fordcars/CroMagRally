@@ -9,3 +9,8 @@ dist/
 .vs/
 .DS_Store
 *.user
+
+# 3DS
+*.3dsx
+*.elf
+*.smdh

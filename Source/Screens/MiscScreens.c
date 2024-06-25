@@ -1027,6 +1027,7 @@ OGLVector3D			fillDirection1 = { .9, -.3, -1 };
 	MakeSpriteObject(&qrCodeDef);
 
 
+#ifndef __3DS__
 	char systemInfo[512];
 	snprintf(systemInfo, sizeof(systemInfo), "CRO-MAG RALLY V%s / %s [%s]\nOPENGL %s [%s]",
 				 PROJECT_VERSION,
@@ -1034,10 +1035,13 @@ OGLVector3D			fillDirection1 = { .9, -.3, -1 };
 				 SDL_GetCurrentVideoDriver(),
 				 (const char*)glGetString(GL_VERSION),
 				 (const char*)glGetString(GL_RENDERER));
+#endif
 	textDef.coord.y = 200;
 	textDef.scale = .15f;
+#ifndef __3DS__
 	ObjNode* techInfo = TextMesh_New(systemInfo, kTextMeshAllCaps, &textDef);
 	techInfo->ColorFilter = (OGLColorRGBA) {.25f, .25f, .25f, 1};
+#endif
 
 
 

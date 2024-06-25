@@ -1035,6 +1035,7 @@ static void PlayArea(void)
 			}
 		}
 
+#ifndef __3DS__
 		if (GetKeyState(SDL_SCANCODE_L) &&
 			GetKeyState(SDL_SCANCODE_A) &&
 			GetNewKeyState(SDL_SCANCODE_P))
@@ -1047,6 +1048,7 @@ static void PlayArea(void)
 		{
 			gHideInfobar = !gHideInfobar;
 		}
+#endif
 
 
 			/* SEE IF PAUSED */

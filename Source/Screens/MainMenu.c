@@ -180,15 +180,18 @@ static void UpdateMainMenuScreen(void)
 	{
 				/* INITIATE SRD */
 
+#ifndef __3DS__
 		if (GetMenuIdleTime() > DEMO_DELAY || GetNewKeyState(SDL_SCANCODE_F1))
 		{
 			gGameView->fadePillarbox = true;
 			KillMenu(MENU_EXITCODE_SELFRUNDEMO);
 		}
+		else
+#endif
 
 				/* SET 100% TOURNAMENT PROGRESSION */
 
-		else if (IsCheatKeyComboDown() && (!saidYeah || GetNumTracksCompletedTotal() < NUM_RACE_TRACKS))
+		if (IsCheatKeyComboDown() && (!saidYeah || GetNumTracksCompletedTotal() < NUM_RACE_TRACKS))
 		{
 			saidYeah = true;
 

@@ -19,6 +19,7 @@
 #define CAMINUS(x)	{kInputTypeAxisMinus, SDL_CONTROLLER_AXIS_##x}
 #define CBNULL()	{kInputTypeUnbound, 0}
 
+#ifndef __3DS__
 const InputBinding kDefaultInputBindings[NUM_CONTROL_NEEDS] =
 {
 	[kNeed_ThrowForward] =
@@ -141,5 +142,7 @@ const InputBinding kDefaultInputBindings[NUM_CONTROL_NEEDS] =
 		.key = { SDL_SCANCODE_ESCAPE },
 		.pad = { CB(START) },
 	},
-
 };
+#else
+const InputBinding kDefaultInputBindings[NUM_CONTROL_NEEDS];
+#endif // __3DS__
