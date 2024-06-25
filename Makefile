@@ -31,7 +31,7 @@ include $(DEVKITARM)/3ds_rules
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	CroMagRally
 BUILD		:=	build
 SOURCES		:=	Source
 DATA		:=	other_data
@@ -52,12 +52,12 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 
 CFLAGS	+=	$(INCLUDE) -D__3DS__ `sdl-config --cflags`
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+CXXFLAGS	:= $(CFLAGS) -fexceptions -std=gnu++2a
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= `$(PREFIX)pkg-config sdl --libs` -lctru -lm -lpomme -lpicaGL
+LIBS	:= `$(PREFIX)pkg-config sdl --libs` -lctru -lm -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib -lpicaGL
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

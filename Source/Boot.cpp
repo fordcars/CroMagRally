@@ -15,7 +15,9 @@ extern "C"
 	#include "game.h"
 	#include "version.h"
 
+#ifndef __3DS__
 	SDL_Window* gSDLWindow = nullptr;
+#endif
 	FSSpec gDataSpec;
 	CommandLineOptions gCommandLine;
 	int gCurrentAntialiasingLevel;
@@ -131,6 +133,7 @@ static void ParseCommandLine(int argc, char** argv)
 
 static void GetInitialWindowSize(int display, int& width, int& height)
 {
+#ifndef __3DS__
 	const float aspectRatio = 16.0f / 9.0f;
 	const float screenCoverage = 2.0f / 3.0f;
 
@@ -147,6 +150,10 @@ static void GetInitialWindowSize(int display, int& width, int& height)
 		width	= displayBounds.w * screenCoverage;
 		height	= displayBounds.w * screenCoverage / aspectRatio;
 	}
+#else
+	width = 800;
+	height = 240;
+#endif
 }
 
 static void Boot(int argc, char** argv)
@@ -162,7 +169,8 @@ static void Boot(int argc, char** argv)
 	InitDefaultPrefs();
 	LoadPrefs();
 
-retryVideo:
+#ifndef __3DS__
+	retryVideo:
 	// Initialize SDL video subsystem
 	if (0 != SDL_Init(SDL_INIT_VIDEO))
 	{
@@ -215,10 +223,12 @@ retryVideo:
 			throw std::runtime_error("Couldn't create SDL window.");
 		}
 	}
+#endif
 
 	// Find path to game data folder
 	fs::path dataPath = FindGameData(executablePath);
 
+#ifndef __3DS__
 	// Init joystick subsystem
 	{
 		SDL_Init(SDL_INIT_GAMECONTROLLER);
@@ -231,17 +241,19 @@ retryVideo:
 
 	// Set fullscreen mode from prefs
 	SetFullscreenMode(true);
+#endif
 }
 
 static void Shutdown()
 {
 	Pomme::Shutdown();
-
+#ifndef __3DS__
 	if (gSDLWindow)
 	{
 		SDL_DestroyWindow(gSDLWindow);
 		gSDLWindow = NULL;
 	}
+#endif
 
 	SDL_Quit();
 }
@@ -282,8 +294,12 @@ int main(int argc, char** argv)
 
 	if (showFinalErrorMessage)
 	{
+#ifndef __3DS__
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Uncaught exception: %s\n", finalErrorMessage.c_str());
 		SDL_ShowSimpleMessageBox(0, "Cro-Mag Rally: Uncaught exception", finalErrorMessage.c_str(), nullptr);
+#else
+		std::cerr << "Uncaught exception: " << finalErrorMessage << std::endl;
+#endif
 	}
 
 	return returnCode;

@@ -14,7 +14,7 @@
 #include "stb_image.h"
 #include "pillarbox.h"
 #include <SDL.h>
-#include <SDL_opengl.h>
+#include <GL/gl.h>
 #include <math.h>
 
 extern SDL_Window*		gSDLWindow;

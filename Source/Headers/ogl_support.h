@@ -5,7 +5,7 @@
 #pragma once
 
 #include "main.h"
-#include <SDL_opengl.h>
+#include <GL/gl.h>
 
 #define MAX_SPLITSCREENS	MAX_LOCAL_PLAYERS
 #define MAX_VIEWPORTS		(1+MAX_SPLITSCREENS)
