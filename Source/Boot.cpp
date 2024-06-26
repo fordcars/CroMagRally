@@ -2,7 +2,12 @@
 // (C) 2022 Iliyas Jorio
 // This file is part of Cro-MagRally. https://github.com/jorio/cromagrally
 
-#include <SDL.h>
+// Using SDL from C++ on 3DS DOES NOT WORK!
+// No idea why, but it causes bery weird UB. I spent too much time on this.
+#ifndef __3DS__
+	#include <SDL.h>
+#endif
+
 #include "Pomme.h"
 #include "PommeInit.h"
 #include "PommeFiles.h"
@@ -263,9 +268,9 @@ static void Shutdown()
 		SDL_DestroyWindow(gSDLWindow);
 		gSDLWindow = NULL;
 	}
-#endif
 
 	SDL_Quit();
+#endif
 }
 
 int main(int argc, char** argv)
