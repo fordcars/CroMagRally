@@ -801,7 +801,7 @@ uint32_t				matFlags;
 
 		/* SEE IF NEED TO ENABLE BLENDING */
 
-#ifndef __3DS__ // CARL: this should be enabled
+#ifndef __3DS__ // CARL TODO: fix this for 3DS
 	if (textureHasAlpha || (diffColor2.a != 1.0f) || (matFlags & BG3D_MATERIALFLAG_ALWAYSBLEND))		// if has alpha, then we need blending on
 	    glEnable(GL_BLEND);
 	else
@@ -850,12 +850,22 @@ const MOPictureData	*picData = &picObj->objectData;
 
 	MO_DrawMaterial(picData->material);							// submit material
 
+#ifdef __3DS__
+	// Why
+	glBegin(GL_QUADS);
+	glTexCoord2f(1, 1);	glVertex3f(-1, -1, z);
+	glTexCoord2f(1, 0);	glVertex3f( 1, -1, z);
+	glTexCoord2f(0, 0);	glVertex3f( 1,  1, z);
+	glTexCoord2f(0, 1);	glVertex3f(-1,  1, z);
+	glEnd();
+#else
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 1);	glVertex3f(-1, -1, z);
 	glTexCoord2f(1, 1);	glVertex3f( 1, -1, z);
 	glTexCoord2f(1, 0);	glVertex3f( 1,  1, z);
 	glTexCoord2f(0, 0);	glVertex3f(-1,  1, z);
 	glEnd();
+#endif
 
 	gPolysThisFrame += 2;										// 2 more triangles
 

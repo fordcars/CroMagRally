@@ -1656,6 +1656,7 @@ void GameMain(void)
 	}
 
 //	HideCursor();
+//gCommandLine.bootToTrack = 2; // CARL
 	if (gCommandLine.bootToTrack != 0)
 	{
 		gGameMode = GAME_MODE_PRACTICE;

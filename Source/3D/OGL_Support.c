@@ -1256,7 +1256,7 @@ int	i;
 	gStateStack_Blend[i] 	= glIsEnabled(GL_BLEND);
 	gStateStack_ProjectionType[i] = gMyState_ProjectionType;
 
-// TODO: May cause graphical glitches on 3DS, to verify.
+// CARL TODO: May cause graphical glitches on 3DS, to verify.
 #ifndef __3DS__
 	glGetFloatv(GL_CURRENT_COLOR, &gStateStack_Color[i][0]);
 #endif
@@ -1264,7 +1264,7 @@ int	i;
 	glGetIntegerv(GL_BLEND_SRC, &gStateStack_BlendSrc[i]);
 	glGetIntegerv(GL_BLEND_DST, &gStateStack_BlendDst[i]);
 
-// TODO: May cause graphical glitches on 3DS, to verify.
+// CARL TODO: May cause graphical glitches on 3DS, to verify.
 #ifndef __3DS__
 	glGetBooleanv(GL_DEPTH_WRITEMASK, &gStateStack_DepthMask[i]);
 #endif
