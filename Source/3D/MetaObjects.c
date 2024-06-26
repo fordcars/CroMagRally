@@ -831,44 +831,7 @@ const OGLMatrix4x4		*m;
 		DoFatalAlert("MO_DrawMatrix: glMultMatrixf!");
 
 }
-static uint32_t texture_data[32*32];// /////////////////////////////////////////CARL
-bool lol = false;
-float CARLITO = 0.0f;
-static GLuint 	texture_id;
-static void loadTexture(void)
-{
-	int i = 0;
 
-	//Generate a basic checkerboard pattern
-	for(int y = 0; y < 32; y++) 
-	{
-		for(int x = 0; x < 32; x++)
-		{
-			if((x + y) % 2 == 0)
-				texture_data[i++] = 0xFF000000;
-			else
-				texture_data[i++] = 0xFFFFFFFF;
-		}
-	}
-
-	glGenTextures (1, &texture_id);
-
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, 0, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
-static void setTex()
-{
-	if(!lol) {
-		lol = true;
-		loadTexture();
-	}
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glEnable(GL_TEXTURE_2D);
-	glGetError();
-} ////////////////// CARL
 /************************ MO: DRAW PICTURE **************************/
 void MO_DrawPicture(const MOPictureObject *picObj)
 {
@@ -885,17 +848,13 @@ const MOPictureData	*picData = &picObj->objectData;
 
 			/* ACTIVATE THE MATERIAL */
 
-	//MO_DrawMaterial(picData->material);							// submit material
-	//setTex();
-	glColor4f(0.0f, CARLITO, 1.0f, CARLITO);CARLITO += 0.0001;
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_COLOR_MATERIAL);
-	glPolygonMode(GL_FRONT_AND_BACK ,GL_FILL);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-1, -1, z);
-	glVertex3f( 1, -1, z);
-	glVertex3f( 1,  1, z);
-	glVertex3f(-1,  1, z);
+	MO_DrawMaterial(picData->material);							// submit material
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1);	glVertex3f(-1, -1, z);
+	glTexCoord2f(1, 1);	glVertex3f( 1, -1, z);
+	glTexCoord2f(1, 0);	glVertex3f( 1,  1, z);
+	glTexCoord2f(0, 0);	glVertex3f(-1,  1, z);
 	glEnd();
 
 	gPolysThisFrame += 2;										// 2 more triangles
