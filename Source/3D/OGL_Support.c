@@ -448,7 +448,10 @@ OGLStyleDefType *styleDefPtr = &setupDefPtr->styles;
 	glFrontFace(GL_CCW);									// CCW is front face
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		// set default blend func
+#ifndef __3DS__
+	// CARL TODO: fix for 3DS
 	glDisable(GL_BLEND);									// but turn it off by default
+#endif
 
 	glDisable(GL_RESCALE_NORMAL);
 
@@ -1318,10 +1321,13 @@ int		i;
 	else
 		glDisable(GL_TEXTURE_2D);
 
+#ifndef __3DS__
+	// CARL TODO: fix for 3DS
 	if (gStateStack_Blend[i])
 		glEnable(GL_BLEND);
 	else
 		glDisable(GL_BLEND);
+#endif
 
 	if (gStateStack_Fog[i])
 		glEnable(GL_FOG);

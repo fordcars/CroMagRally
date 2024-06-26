@@ -100,8 +100,19 @@ typedef struct
 
 typedef struct
 {
+#ifdef __3DS__
+	// 3DS only supports unsigned short indices
+	GLushort vertexIndices[3];
+#else
 	GLuint vertexIndices[3];
+#endif
 }MOTriangleIndecies;
+
+// Struct found in BG3D files
+typedef struct
+{
+	GLuint vertexIndices[3];
+}BG3DMOTriangleIndecies;
 
 typedef struct
 {
@@ -120,6 +131,25 @@ typedef struct
 	int					pointCapacity;						// size of point buffer. If 0, assume it's no larger than numPoints.
 	int					triangleCapacity;					// size of triangle buffer. If 0, assume it's no larger than numTriangles.
 }MOVertexArrayData;
+
+// Struct found in BG3D files
+typedef struct
+{
+	int					numMaterials;						// # material layers used in geometry (if negative, then use current texture)
+	MOMaterialObject 	*materials[MAX_MATERIAL_LAYERS];	// a reference to a material meta object
+
+	int					numPoints;							// # vertices in the model
+	int					numTriangles;						// # triangls in the model
+	OGLPoint3D			*points;							// ptr to array of vertex x,y,z coords
+	OGLVector3D			*normals;							// ptr to array of vertex normals
+	OGLTextureCoord		*uvs;								// ptr to array of vertex uv's
+	OGLColorRGBA_Byte	*colorsByte;						// ptr to array of vertex colors (byte & float versions)
+	OGLColorRGBA		*colorsFloat;
+	MOTriangleIndecies	*triangles;							// ptr to array of triangle triad indecies
+
+	int					pointCapacity;						// size of point buffer. If 0, assume it's no larger than numPoints.
+	int					triangleCapacity;					// size of triangle buffer. If 0, assume it's no larger than numTriangles.
+}BG3DMOVertexArrayData;
 
 typedef struct
 {

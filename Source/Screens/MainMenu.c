@@ -212,6 +212,7 @@ static void UpdateMainMenuScreen(void)
 void DoMainMenuScreen(void)
 {
 do_again:
+printf("MAIN MENU!\n"); // CARL
 	SetupMainMenuScreen();
 
 

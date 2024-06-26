@@ -677,7 +677,12 @@ use_current:
 
 
 //	glLockArraysEXT(0, data->numPoints);
+#ifdef __3DS__
+	// 3DS only supports GL_UNSIGNED_SHORT for glDrawElements
+	glDrawElements(GL_TRIANGLES,data->numTriangles*3,GL_UNSIGNED_SHORT,&data->triangles[0]);
+#else
 	glDrawElements(GL_TRIANGLES,data->numTriangles*3,GL_UNSIGNED_INT,&data->triangles[0]);
+#endif
 	if (OGL_CheckError())
 		DoFatalAlert("MO_DrawGeometry_VertexArray: glDrawElements");
 //	glUnlockArraysEXT();

@@ -19,6 +19,9 @@ void DisposePillarboxMaterial(void)
 
 static void DrawPillarbox(ObjNode* objNode)
 {
+#ifdef __3DS__
+	return; // CARL: TODO
+#endif
 	// Get dimensions of 0th viewport
 	int vpw = gGameView->panes[0].vpw;
 	int vph = gGameView->panes[0].vph;

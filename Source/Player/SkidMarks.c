@@ -259,7 +259,10 @@ int		i,j,n;
 	glDisable(GL_CULL_FACE);								// deactivate culling
 	glDepthMask(GL_FALSE);									// no z-writes
 	glDisable(GL_TEXTURE_2D);
+#ifndef __3DS__
+	// CARL TODO: fix for 3DS
 	glEnable(GL_BLEND);
+#endif
 
 			/******************/
 			/* DRAW EACH SKID */

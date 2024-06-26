@@ -861,7 +861,7 @@ short			skelType, playerNum;
 			case	CUSTOM_GENRE:
 					if (theNode->CustomDrawFunction)
 					{
-						//theNode->CustomDrawFunction(theNode); CARL
+						theNode->CustomDrawFunction(theNode);
 					}
 					break;
 		}

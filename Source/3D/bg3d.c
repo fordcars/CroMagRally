@@ -686,7 +686,27 @@ MOTriangleIndecies	*triList;
 
 	data = &gBG3D_CurrentGeometryObj->objectData;					// point to geometry data
 	numTriangles = data->numTriangles;								// get # triangles expect to read
+#ifdef __3DS__
+	// Create temporary struct for ready, then copy to correct struct
+	long tmpCount = sizeof(BG3DMOTriangleIndecies) * numTriangles;			// calc size of data to read
+	BG3DMOTriangleIndecies *tmpTriList = AllocPtr(tmpCount);										// alloc buffer to hold data
+	if (tmpTriList == nil)
+		DoFatalAlert("ReadTriangleArray: AllocPtr failed!");
 
+	FSRead(refNum, &tmpCount, (Ptr) tmpTriList);								// read the data
+	UnpackStructs(">LLL", sizeof(BG3DMOTriangleIndecies), numTriangles, tmpTriList);
+
+	// Copy
+	count = sizeof(MOTriangleIndecies) * numTriangles;				// calc size of data to read
+	triList = AllocPtr(count);										// alloc buffer to hold data
+	for(long i = 0; i < numTriangles; ++i)
+	{
+		triList[i].vertexIndices[0] = (GLushort)tmpTriList[i].vertexIndices[0];
+		triList[i].vertexIndices[1] = (GLushort)tmpTriList[i].vertexIndices[1];
+		triList[i].vertexIndices[2] = (GLushort)tmpTriList[i].vertexIndices[2];
+	}
+	SafeDisposePtr((Ptr) tmpTriList);
+#else
 	count = sizeof(MOTriangleIndecies) * numTriangles;				// calc size of data to read
 	triList = AllocPtr(count);										// alloc buffer to hold data
 	if (triList == nil)
@@ -694,6 +714,7 @@ MOTriangleIndecies	*triList;
 
 	FSRead(refNum, &count, (Ptr) triList);								// read the data
 	UnpackStructs(">LLL", sizeof(MOTriangleIndecies), numTriangles, triList);
+#endif
 
 	data->triangles = triList;										// assign triangle array to geometry header
 }
