@@ -83,6 +83,8 @@ void DoFatalAlert(const char* format, ...)
 	printf("CMR Fatal Alert: %s\n", message);
 #ifndef __3DS__
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cro-Mag Rally", message, NULL);//gSDLWindow);
+#elif defined __3DS__
+while(true){}
 #endif
 
 	Exit2D();

@@ -311,6 +311,6 @@ int main(int argc, char** argv)
 		std::cerr << "Uncaught exception: " << finalErrorMessage << std::endl;
 #endif
 	}
-while(true){} // CARL
+
 	return returnCode;
 }

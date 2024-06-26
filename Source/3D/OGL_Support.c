@@ -142,10 +142,12 @@ void OGL_Boot(void)
 
 		/* SEE IF SUPPORT 1024x1024 TEXTURES */
 
+#ifndef __3DS__
 	GLint maxTexSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 	if (maxTexSize < 1024)
 		DoFatalAlert("Your video card cannot do 1024x1024 textures, so it is below the game's minimum system requirements.");
+#endif
 }
 
 
