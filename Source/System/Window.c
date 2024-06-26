@@ -51,8 +51,13 @@ int				gGameWindowWidth, gGameWindowHeight;
 void InitWindowStuff(void)
 {
 	// This is filled in from gSDLWindow in-game
+#ifndef __3DS__
 	gGameWindowWidth = 640;
 	gGameWindowHeight = 480;
+#elif defined __3DS__
+	gGameWindowWidth = 400;
+	gGameWindowHeight = 240;
+#endif
 }
 
 

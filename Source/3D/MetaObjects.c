@@ -833,7 +833,6 @@ const OGLMatrix4x4		*m;
 }
 
 /************************ MO: DRAW PICTURE **************************/
-
 void MO_DrawPicture(const MOPictureObject *picObj)
 {
 const MOPictureData	*picData = &picObj->objectData;
@@ -850,7 +849,6 @@ const MOPictureData	*picData = &picObj->objectData;
 			/* ACTIVATE THE MATERIAL */
 
 	MO_DrawMaterial(picData->material);							// submit material
-
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 1);	glVertex3f(-1, -1, z);
 	glTexCoord2f(1, 1);	glVertex3f( 1, -1, z);

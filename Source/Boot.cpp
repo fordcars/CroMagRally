@@ -159,7 +159,7 @@ static void GetInitialWindowSize(int display, int& width, int& height)
 		height	= displayBounds.w * screenCoverage / aspectRatio;
 	}
 #else
-	width = 800;
+	width = 400;
 	height = 240;
 #endif
 }

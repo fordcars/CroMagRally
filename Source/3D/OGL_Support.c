@@ -566,7 +566,6 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 #endif
 
 #ifdef __3DS__
-	// Not sure about this
 	WaitForVBlank3ds();
 #endif
 
@@ -585,6 +584,9 @@ void OGL_DrawScene(void (*drawRoutine)(void))
 			/* UPDATE WINDOW SIZE ONCE PER FRAME */
 #ifndef __3DS__
 	SDL_GL_GetDrawableSize(gSDLWindow, &gGameWindowWidth, &gGameWindowHeight);
+#elif defined __3DS__
+	gGameWindowWidth = 400;
+	gGameWindowHeight = 240;
 #endif
 
 
