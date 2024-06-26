@@ -1066,21 +1066,54 @@ Ptr						imageFileData = nil;
 //
 // Sets the current OpenGL texture using glBindTexture et.al. so any textured triangles will use it.
 //
+static uint32_t texture_data[32*32];// /////////////////////////////////////////CARL
+bool poop = false;
+static GLuint 	texture_id;
+static void loadTexture(void)
+{
+	int i = 0;
 
+	//Generate a basic checkerboard pattern
+	for(int y = 0; y < 32; y++) 
+	{
+		for(int x = 0; x < 32; x++)
+		{
+			if((x + y) % 2 == 0)
+				texture_data[i++] = 0xFF000000;
+			else
+				texture_data[i++] = 0xFFFFFFFF;
+		}
+	}
+
+	glGenTextures (1, &texture_id);
+
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glTexImage2D(GL_TEXTURE_2D, 0, 0, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}////////////////////////////////////////////////////////CARL
 void OGL_Texture_SetOpenGLTexture(GLuint textureName)
 {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	if (OGL_CheckError())
-		DoFatalAlert("OGL_Texture_SetOpenGLTexture: glPixelStorei failed!");
+	// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	// if (OGL_CheckError())
+	// 	DoFatalAlert("OGL_Texture_SetOpenGLTexture: glPixelStorei failed!");
 
-	glBindTexture(GL_TEXTURE_2D, textureName);
-	if (OGL_CheckError())
-		DoFatalAlert("OGL_Texture_SetOpenGLTexture: glBindTexture failed!");
+	// glBindTexture(GL_TEXTURE_2D, textureName);
+	// if (OGL_CheckError())
+	// 	DoFatalAlert("OGL_Texture_SetOpenGLTexture: glBindTexture failed!");
 
 
-	glGetError();
+	// glGetError();
 
+	// glEnable(GL_TEXTURE_2D);
+	if(!poop) { ///////////////////////// CARL
+		poop = true;
+		loadTexture();
+	}
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glEnable(GL_TEXTURE_2D);
+	glGetError(); ////////////////// CARL
 }
 
 
