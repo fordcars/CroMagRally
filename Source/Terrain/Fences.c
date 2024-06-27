@@ -335,12 +335,12 @@ OGLPoint3D				*nubs;
 	{
 		.genre		= CUSTOM_GENRE,
 		.slot		= FENCE_SLOT,
-		.flags		= STATUS_BIT_KEEPBACKFACES|STATUS_BIT_NOLIGHTING,
+		.flags		= STATUS_BIT_KEEPBACKFACES,//|STATUS_BIT_NOLIGHTING,
 		.scale		= 1,
 		.drawCall	= DrawFences,
 	};
 
-	return nil;//MakeNewObject(&def); CARL TODO REMOVE
+	return MakeNewObject(&def);
 }
 
 

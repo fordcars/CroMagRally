@@ -172,11 +172,11 @@ ObjNode* InitParticleSystem(void)
 		.slot 		= PARTICLE_SLOT,
 		.moveCall 	= nil,
 		.scale 		= 1,
-		.flags 		= STATUS_BIT_KEEPBACKFACES|STATUS_BIT_NOLIGHTING|STATUS_BIT_NOZWRITES,
+		.flags 		= STATUS_BIT_KEEPBACKFACES|STATUS_BIT_NOZWRITES,//|STATUS_BIT_NOLIGHTING,
 		.drawCall	= DrawParticleGroup,
 	};
 
-	return nil;//MakeNewObject(&def); CARL TODO REMOVE
+	return MakeNewObject(&def);
 }
 
 

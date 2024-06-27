@@ -1357,7 +1357,10 @@ int		i;
 void OGL_EnableLighting(void)
 {
 	gMyState_Lighting = true;
+#ifndef __3DS__
+	// Doesn't do anything on 3DS it seems.
 	glEnable(GL_LIGHTING);
+#endif
 }
 
 /******************* OGL DISABLE LIGHTING ****************************/
@@ -1365,7 +1368,10 @@ void OGL_EnableLighting(void)
 void OGL_DisableLighting(void)
 {
 	gMyState_Lighting = false;
+#ifndef __3DS__
+	// This messes up the graphics on 3DS
 	glDisable(GL_LIGHTING);
+#endif
 }
 
 
