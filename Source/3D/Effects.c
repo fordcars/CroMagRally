@@ -176,7 +176,7 @@ ObjNode* InitParticleSystem(void)
 		.drawCall	= DrawParticleGroup,
 	};
 
-	return MakeNewObject(&def);
+	return nil;//MakeNewObject(&def); CARL TODO REMOVE
 }
 
 

@@ -340,7 +340,7 @@ OGLPoint3D				*nubs;
 		.drawCall	= DrawFences,
 	};
 
-	return MakeNewObject(&def);
+	return nil;//MakeNewObject(&def); CARL TODO REMOVE
 }
 
 
