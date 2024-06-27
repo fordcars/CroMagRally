@@ -5,8 +5,12 @@
 #include "game.h"
 #include <SDL.h>
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 #ifndef __3DS__
-extern SDL_Window* gSDLWindow;
+	extern SDL_Window* gSDLWindow;
 #endif
 
 // Provide GameController stubs for CI runners that have old SDL packages.
@@ -179,7 +183,39 @@ static void UpdateMouseButtonStates(int mouseWheelDelta)
 
 static void UpdateInputNeeds(void)
 {
-#ifndef __3DS__
+#ifdef __3DS__
+	unsigned downButtons = GetHeldButtons3ds();
+
+	for (int i = 0; i < NUM_CONTROL_NEEDS; i++)
+	{
+		// TODO CARL: Improve 3DS bindings
+		bool downNow = false;
+		switch(i)
+		{
+			case kNeed_ThrowForward:  downNow = downButtons & POMME_3DS_KEY_R; break;
+			case kNeed_ThrowBackward: downNow = downButtons & POMME_3DS_KEY_L; break;
+			case kNeed_Brakes:        downNow = downButtons & POMME_3DS_KEY_X; break;
+			case kNeed_Forward:       downNow = downButtons & POMME_3DS_KEY_A; break;
+			case kNeed_Backward:      downNow = downButtons & POMME_3DS_KEY_B; break;
+			case kNeed_CameraMode:    downNow = downButtons & POMME_3DS_KEY_SELECT; break;
+			case kNeed_RearView:      downNow = downButtons & POMME_3DS_KEY_Y; break;
+			case kNeed_Left:          downNow = downButtons & POMME_3DS_KEY_DLEFT; break;
+			case kNeed_Right:         downNow = downButtons & POMME_3DS_KEY_DRIGHT; break;
+			case kNeed_UILeft:        downNow = downButtons & POMME_3DS_KEY_DLEFT; break;
+			case kNeed_UIRight:       downNow = downButtons & POMME_3DS_KEY_DRIGHT; break;
+			case kNeed_UIUp:          downNow = downButtons & POMME_3DS_KEY_DUP; break;
+			case kNeed_UIDown:        downNow = downButtons & POMME_3DS_KEY_DDOWN; break;
+			// case kNeed_UIPrev:        downNow = downButtons & POMME_3DS_KEY_R; break;
+			//c ase kNeed_UINext:        downNow = downButtons & POMME_3DS_KEY_R; break;
+			case kNeed_UIConfirm:     downNow = downButtons & POMME_3DS_KEY_A; break;
+			// case kNeed_UIBack:        downNow = downButtons & POMME_3DS_KEY_R; break;
+			// case kNeed_UIDelete:      downNow = downButtons & POMME_3DS_KEY_R; break;
+			case kNeed_UIPause:       downNow = downButtons & POMME_3DS_KEY_START; break;
+			// case kNeed_UIStart:       downNow = downButtons & POMME_3DS_KEY_R; break;
+		}
+		UpdateKeyState(&gNeedStates[i], downNow);
+	}
+#else
 	for (int i = 0; i < NUM_CONTROL_NEEDS; i++)
 	{
 		const InputBinding* kb = &gGamePrefs.bindings[i];
@@ -279,7 +315,10 @@ static void UpdateControllerSpecificInputNeeds(int controllerNum)
 
 void DoSDLMaintenance(void)
 {
-#ifndef __3DS__
+#ifdef __3DS__
+	ScanInput3ds();
+	gUserPrefersGamepad = true;
+#else
 	gTextInput[0] = '\0';
 	gMouseMotionNow = false;
 	int mouseWheelDelta = 0;
@@ -461,6 +500,8 @@ Boolean GetNeedState(int needID, int playerID)
 		return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
 	}
 
+#else
+	return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
 #endif
 	return false;
 }
@@ -480,7 +521,7 @@ Boolean GetNeedStateAnyP(int needID)
 	// Fallback to KB/M
 	return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
 #else
-	return false;
+	return gNeedStates[needID] & KEYSTATE_ACTIVE_BIT;
 #endif
 }
 
@@ -507,7 +548,7 @@ Boolean GetNewNeedState(int needID, int playerID)
 
 	return false;
 #else
-	return false;
+	return gNeedStates[needID] == KEYSTATE_PRESSED;
 #endif
 }
 
@@ -526,18 +567,36 @@ Boolean GetNewNeedStateAnyP(int needID)
 	// Fallback to KB/M
 	return gNeedStates[needID] == KEYSTATE_PRESSED;
 #else
-	return false;
+	return gNeedStates[needID] == KEYSTATE_PRESSED;
 #endif
 }
 
 static float GetAnalogValue(int needID, bool raw, int playerID)
 {
-#ifndef __3DS__
+
 	GAME_ASSERT(playerID >= 0);
 	GAME_ASSERT(playerID < MAX_LOCAL_PLAYERS);
 	GAME_ASSERT(needID >= 0);
 	GAME_ASSERT(needID < NUM_CONTROL_NEEDS);
-
+#ifdef __3DS__
+	float left = SDL_max(0, Get3dsCPadX());
+	if (needID == kNeed_Left)
+	{
+		return SDL_max(0, Get3dsCPadX());
+	}
+	else if (needID == kNeed_Right)
+	{
+		return SDL_min(0, Get3dsCPadX());
+	}
+	else if (needID == kNeed_Forward)
+	{
+		return SDL_max(0, Get3dsCPadY());
+	}
+	else if (needID == kNeed_Backward)
+	{
+		return SDL_min(0, Get3dsCPadY());
+	}
+#else
 	const Controller* controller = &gControllers[playerID];
 
 	// Keyboard takes precedence when the key is pressed
@@ -569,14 +628,11 @@ static float GetAnalogValue(int needID, bool raw, int playerID)
 	}
 
 	return 0;
-#else
-	return false;
 #endif
 }
 
 float GetNeedAxis1D(int negativeNeedID, int positiveNeedID, int playerID)
 {
-#ifndef __3DS__
 	float neg = GetAnalogValue(negativeNeedID, false, playerID);
 	float pos = GetAnalogValue(positiveNeedID, false, playerID);
 
@@ -588,9 +644,6 @@ float GetNeedAxis1D(int negativeNeedID, int positiveNeedID, int playerID)
 	{
 		return pos;
 	}
-#else
-	return false;
-#endif
 }
 
 #if 0
