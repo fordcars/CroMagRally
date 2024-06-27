@@ -579,14 +579,13 @@ static float GetAnalogValue(int needID, bool raw, int playerID)
 	GAME_ASSERT(needID >= 0);
 	GAME_ASSERT(needID < NUM_CONTROL_NEEDS);
 #ifdef __3DS__
-	float left = SDL_max(0, Get3dsCPadX());
 	if (needID == kNeed_Left)
 	{
-		return SDL_max(0, Get3dsCPadX());
+		return -SDL_min(0, Get3dsCPadX());
 	}
 	else if (needID == kNeed_Right)
 	{
-		return SDL_min(0, Get3dsCPadX());
+		return SDL_max(0, Get3dsCPadX());
 	}
 	else if (needID == kNeed_Forward)
 	{
@@ -594,8 +593,9 @@ static float GetAnalogValue(int needID, bool raw, int playerID)
 	}
 	else if (needID == kNeed_Backward)
 	{
-		return SDL_min(0, Get3dsCPadY());
+		return -SDL_min(0, Get3dsCPadY());
 	}
+	return 0;
 #else
 	const Controller* controller = &gControllers[playerID];
 
