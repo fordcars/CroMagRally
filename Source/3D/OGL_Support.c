@@ -418,6 +418,7 @@ static void OGL_InitDrawContext(void)
 	GAME_ASSERT(gStateStackIndex == 0);
 
 	glEnable(GL_DEPTH_TEST);								// use z-buffer
+	glDepthFunc(GL_LESS);
 
 	{
 		GLfloat	color[] = {1,1,1,1};									// set global material color to white
@@ -1267,9 +1268,12 @@ int	i;
 	glGetIntegerv(GL_BLEND_SRC, &gStateStack_BlendSrc[i]);
 	glGetIntegerv(GL_BLEND_DST, &gStateStack_BlendDst[i]);
 
-// CARL TODO: May cause graphical glitches on 3DS, to verify.
 #ifndef __3DS__
 	glGetBooleanv(GL_DEPTH_WRITEMASK, &gStateStack_DepthMask[i]);
+#else
+	// We don't have a way of getting current depth mask in 3DS,
+	// so set to true to avoid deth test issues.
+	gStateStack_DepthMask[i] = GL_TRUE;
 #endif
 }
 
@@ -1305,11 +1309,15 @@ int		i;
 	else
 		glDisable(GL_CULL_FACE);
 
-
+// CARL TODO: PicaGL doesn't support glIsEnabled on GL_DEPTH_TEST.
+// We should simply update PicaGL, but I'm too lazy rn.
+// This is a quick fix to avoid depth test issues.
+#ifndef __3DS__
 	if (gStateStack_DepthTest[i])
 		glEnable(GL_DEPTH_TEST);
 	else
 		glDisable(GL_DEPTH_TEST);
+#endif
 
 	if (gStateStack_Normalize[i])
 		glEnable(GL_NORMALIZE);

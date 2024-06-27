@@ -208,7 +208,7 @@ static void UpdateInputNeeds(void)
 			// case kNeed_UIPrev:        downNow = downButtons & POMME_3DS_KEY_R; break;
 			//c ase kNeed_UINext:        downNow = downButtons & POMME_3DS_KEY_R; break;
 			case kNeed_UIConfirm:     downNow = downButtons & POMME_3DS_KEY_A; break;
-			// case kNeed_UIBack:        downNow = downButtons & POMME_3DS_KEY_R; break;
+			case kNeed_UIBack:        downNow = downButtons & POMME_3DS_KEY_B; break;
 			// case kNeed_UIDelete:      downNow = downButtons & POMME_3DS_KEY_R; break;
 			case kNeed_UIPause:       downNow = downButtons & POMME_3DS_KEY_START; break;
 			// case kNeed_UIStart:       downNow = downButtons & POMME_3DS_KEY_R; break;

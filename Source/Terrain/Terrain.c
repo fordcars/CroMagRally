@@ -875,7 +875,6 @@ uint32_t			pictRowBytes;
 
 					/* SUBMIT THE GEOMETRY */
 
-				glDisable(GL_CULL_FACE);
 				MO_DrawGeometry_VertexArray(gSuperTileMemoryList[i].meshData);
 				gNumSuperTilesDrawn++;
 			}
