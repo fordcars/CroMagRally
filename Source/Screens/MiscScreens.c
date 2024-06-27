@@ -204,24 +204,20 @@ void DoWarmUpScreen(void)
 {
 	OGLSetupInputType	viewDef;
 
-			/* SETUP VIEW */
+	// 		/* SETUP VIEW */
 
-	OGL_NewViewDef(&viewDef);
-	viewDef.view.pillarboxRatio		= PILLARBOX_RATIO_FULLSCREEN;
-	viewDef.view.fontName			= "rockfont";
+	// OGL_NewViewDef(&viewDef);
+	// viewDef.view.pillarboxRatio		= PILLARBOX_RATIO_FULLSCREEN;
+	// viewDef.view.fontName			= "rockfont";
 
-	OGL_SetupGameView(&viewDef);
+	// OGL_SetupGameView(&viewDef);
 
 			/* SHOW IT */
 
-	for (int i = 0; i < 8; i++)
-	{
-		OGL_DrawScene(DrawObjects);
-		DoSDLMaintenance();
-	}
+	OGL_DrawScene(DrawObjects);
 
 			/* CLEANUP */
-
+return;
 	DeleteAllObjects();
 
 	OGL_DisposeGameView();

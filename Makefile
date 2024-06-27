@@ -33,12 +33,12 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	CroMagRally
 BUILD		:=	build
-SOURCES		:=	Source Source/3D Source/Items Source/Player Source/Screens Source/Skeleton Source/System Source/Terrain
+SOURCES		:=	Source Source/3D
 DATA		:=	other_data
 INCLUDES	:=	Source/Headers extern extern/Pomme/src extern/Pomme/extern/picaGL/include
 GRAPHICS	:=	gfx
 GFXBUILD	:=	$(BUILD)
-ROMFS		:=	Data
+ROMFS		:=	TestData#Data
 #GFXBUILD	:=	$(ROMFS)/gfx
 
 #---------------------------------------------------------------------------------

@@ -1628,74 +1628,74 @@ void GameMain(void)
 				/* BOOT STUFF */
 				/**************/
 
-	ToolBoxInit();
+// 	ToolBoxInit();
 
 
 
-			/* INIT SOME OF MY STUFF */
+// 			/* INIT SOME OF MY STUFF */
 
-	InitSpriteManager();
-	InitBG3DManager();
-    InitNetworkManager();
- 	InitInput();
-	InitWindowStuff();
-	InitTerrainManager();
-	InitSkeletonManager();
-	InitSoundTools();
-	InitTwitchSystem();
-
-
-			/* INIT MORE MY STUFF */
-
-	InitObjectManager();
-
-	{
-		unsigned long someLong;
-		GetDateTime(&someLong);		// init random seed
-		SetMyRandomSeed(someLong);
-	}
-
-//	HideCursor();
-//gCommandLine.bootToTrack = 2; // CARL
-	if (gCommandLine.bootToTrack != 0)
-	{
-		gGameMode = GAME_MODE_PRACTICE;
-		gTrackNum = gCommandLine.bootToTrack - 1;
-		InitPlayerInfo_Game();
-
-		if (gCommandLine.car)
-		{
-			gPlayerInfo[0].vehicleType = gCommandLine.car - 1;
-		}
-
-		InitArea();
-		PlayArea();
-		CleanupLevel();
-		gCommandLine.bootToTrack = 0;
-	}
-
-	DoWarmUpScreen();
-	PreloadGameArt();
-	PlaySong(SONG_THEME, true);
+// 	InitSpriteManager();
+// 	InitBG3DManager();
+//     InitNetworkManager();
+//  	InitInput();
+// 	InitWindowStuff();
+// 	InitTerrainManager();
+// 	InitSkeletonManager();
+// 	InitSoundTools();
+// 	InitTwitchSystem();
 
 
-		/* SHOW TITLE SCREEN */
+// 			/* INIT MORE MY STUFF */
 
-	if (gDebugMode == 0)		// in debug mode, skip title
-	{
-		//DoTitleScreen(); CARL
-	}
+// 	InitObjectManager();
+
+// 	{
+// 		unsigned long someLong;
+// 		GetDateTime(&someLong);		// init random seed
+// 		SetMyRandomSeed(someLong);
+// 	}
+
+// //	HideCursor();
+// //gCommandLine.bootToTrack = 2; // CARL
+// 	if (gCommandLine.bootToTrack != 0)
+// 	{
+// 		gGameMode = GAME_MODE_PRACTICE;
+// 		gTrackNum = gCommandLine.bootToTrack - 1;
+// 		InitPlayerInfo_Game();
+
+// 		if (gCommandLine.car)
+// 		{
+// 			gPlayerInfo[0].vehicleType = gCommandLine.car - 1;
+// 		}
+
+// 		InitArea();
+// 		PlayArea();
+// 		CleanupLevel();
+// 		gCommandLine.bootToTrack = 0;
+// 	}
+
+	DoWarmUpScreen();return;
+	// PreloadGameArt();
+	// PlaySong(SONG_THEME, true);
 
 
-		/* MAIN LOOP */
+	// 	/* SHOW TITLE SCREEN */
 
-	while(true)
-	{
-		PlaySong(SONG_THEME, true);
-		DoMainMenuScreen();
+	// if (gDebugMode == 0)		// in debug mode, skip title
+	// {
+	// 	//DoTitleScreen(); CARL
+	// }
 
-		PlayGame();
-	}
+
+	// 	/* MAIN LOOP */
+
+	// while(true)
+	// {
+	// 	PlaySong(SONG_THEME, true);
+	// 	DoMainMenuScreen();
+
+	// 	PlayGame();
+	// }
 }
 
 
