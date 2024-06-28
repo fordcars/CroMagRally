@@ -46,18 +46,18 @@ ROMFS		:=	Data
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
-CFLAGS	:=	-g -Wall -O2 -mword-relocations \
+CFLAGS	:=	-Wall -O2 -mword-relocations \
 			-ffunction-sections \
 			$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -D__3DS__ `sdl-config --cflags` -Wno-multichar -Wno-unused-function -Wno-unused-const-variable -Wno-unknown-pragmas
 
-CXXFLAGS	:= $(CFLAGS) -fexceptions -std=gnu++2a
+CXXFLAGS	:= $(CFLAGS) -fexceptions
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= `$(PREFIX)pkg-config sdl --libs` -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib -lpicaGL -lctru -lm 
+LIBS	:= -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib `$(PREFIX)pkg-config sdl --libs` -lpicaGL -lctru -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
