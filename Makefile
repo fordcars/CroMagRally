@@ -50,7 +50,7 @@ CFLAGS	:=	-Wall -O2 -mword-relocations \
 			-ffunction-sections \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -D__3DS__ `sdl-config --cflags` -Wno-multichar -Wno-unused-function -Wno-unused-const-variable -Wno-unknown-pragmas
+CFLAGS	+=	$(INCLUDE) -D__3DS__ -DENABLE_LOADING_SCREEN `sdl-config --cflags` -Wno-multichar -Wno-unused-function -Wno-unused-const-variable -Wno-unknown-pragmas
 
 CXXFLAGS	:= $(CFLAGS) -fexceptions
 

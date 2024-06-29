@@ -10,10 +10,12 @@
 /* EXTERNALS   */
 /***************/
 
+
 #include "game.h"
 #include "bones.h"
 #include "lzss.h"
 #include <string.h>
+#include <stdlib.h>
 
 /****************************/
 /*    PROTOTYPES            */
@@ -97,6 +99,24 @@ float	g3DTileSize, g3DMinY, g3DMaxY;
 MOMaterialObject* gCavemanSkins[2][NUM_CAVEMAN_SKINS];
 
 PrefsType gDiskShadowPrefs;
+
+//#ifdef __3DS__
+// Converts GL_UNSIGNED_SHORT_1_5_5_5_REV BGRA (so, 1: alpha, 5: blue, 5: green, 5: red)
+// into GL_UNSIGNED_BYTE (8: red, 8: green, 8: blue, 8: alpha).
+#define TERRAIN_SIZE_TO_3DS_SIZE(terrainSizeBeforeConversion) (terrainSizeBeforeConversion*2)
+static void ConvertTerrainTex(void* inData, void* outPixels, int width, int height)
+{
+	const int RATIO_8_BIT_5_BIT = 255 / 31;
+	for(unsigned i = 0; i < width * height; ++i)
+	{
+		short v = ((uint16_t*)inData)[i];
+		((unsigned char*)outPixels)[i*4]     = ((v >> 10) & 0x1ff) * RATIO_8_BIT_5_BIT; // R
+		((unsigned char*)outPixels)[i*4 + 1] = ((v >> 5) & 0x1ff)  * RATIO_8_BIT_5_BIT; // G
+		((unsigned char*)outPixels)[i*4 + 2] = ((v) & 0x1ff)       * RATIO_8_BIT_5_BIT; // B
+		((unsigned char*)outPixels)[i*4 + 3] = 255*(v >> 15);                           // A
+	}
+}
+//#endif
 
 
 /****************** SET DEFAULT DIRECTORY ********************/
@@ -1472,8 +1492,19 @@ static void LoadTerrainSuperTileTextures(short fRefNum)
 
 				/* LOAD IT IN */
 
+#ifdef __3DS__
+		// 3DS does not suppport GL_UNSIGNED_SHORT_1_5_5_5_REV
+		const unsigned EXPECTED_SIZE = TERRAIN_SIZE_TO_3DS_SIZE(size);
+		char* convertedPixels = malloc(EXPECTED_SIZE);
+		ConvertTerrainTex(pixels, convertedPixels, SUPERTILE_TEXMAP_SIZE, SUPERTILE_TEXMAP_SIZE);
+		gSuperTileTextureNames[i] = OGL_TextureMap_Load(convertedPixels, SUPERTILE_TEXMAP_SIZE, SUPERTILE_TEXMAP_SIZE,
+														GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE);
+		free(convertedPixels);
+#else
+
 		gSuperTileTextureNames[i] = OGL_TextureMap_Load(pixels, SUPERTILE_TEXMAP_SIZE, SUPERTILE_TEXMAP_SIZE,
 														GL_BGRA, GL_RGB, GL_UNSIGNED_SHORT_1_5_5_5_REV);
+#endif
 
 		OGL_Texture_SetOpenGLTexture(gSuperTileTextureNames[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);		// set clamp mode after each texture set since OGL just likes it that way
