@@ -176,9 +176,7 @@ static void Boot(int argc, char** argv)
 
 	// Load game prefs before starting
 	InitDefaultPrefs();
-#ifndef __3DS__
 	LoadPrefs();
-#endif
 
 #ifndef __3DS__
 	retryVideo:
@@ -264,9 +262,9 @@ static void Shutdown()
 		SDL_DestroyWindow(gSDLWindow);
 		gSDLWindow = NULL;
 	}
+#endif
 
 	SDL_Quit();
-#endif
 }
 
 int main(int argc, char** argv)

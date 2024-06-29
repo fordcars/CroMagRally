@@ -356,7 +356,6 @@ OSErr iErr;
 long createdDirID;
 
 			/* CHECK PREFERENCES FOLDER */
-#ifndef __3DS__
 	iErr = FindFolder(kOnSystemDisk,kPreferencesFolderType,kDontCreateFolder,		// locate the folder
 					&gPrefsFolderVRefNum,&gPrefsFolderDirID);
 	if (iErr != noErr)
@@ -366,7 +365,6 @@ long createdDirID;
 	{
 		iErr = DirCreate(gPrefsFolderVRefNum, gPrefsFolderDirID, PREFS_FOLDER_NAME, &createdDirID);		// make folder in there
 	}
-#endif
 }
 
 

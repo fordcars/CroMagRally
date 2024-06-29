@@ -1656,7 +1656,6 @@ void GameMain(void)
 	}
 
 //	HideCursor();
-//gCommandLine.bootToTrack = 2; // CARL
 	if (gCommandLine.bootToTrack != 0)
 	{
 		gGameMode = GAME_MODE_PRACTICE;
@@ -1683,7 +1682,7 @@ void GameMain(void)
 
 	if (gDebugMode == 0)		// in debug mode, skip title
 	{
-		//DoTitleScreen(); CARL
+		DoTitleScreen();
 	}
 
 
