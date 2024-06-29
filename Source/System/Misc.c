@@ -16,6 +16,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 #ifndef __3DS__
 extern	SDL_Window* 	gSDLWindow;
 #endif
@@ -84,7 +88,7 @@ void DoFatalAlert(const char* format, ...)
 #ifndef __3DS__
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cro-Mag Rally", message, NULL);//gSDLWindow);
 #elif defined __3DS__
-while(true){}
+	while(ShouldDoMainLoop3ds()) {}
 #endif
 
 	Exit2D();

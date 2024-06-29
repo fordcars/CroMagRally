@@ -12,6 +12,10 @@
 
 #include "game.h"
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 
 /****************************/
 /*    PROTOTYPES            */
@@ -120,7 +124,11 @@ Boolean SelectSingleTrack(void)
 	CalcFramesPerSecond();
 	ReadKeyboard();
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 			/* SEE IF MAKE SELECTION */
 

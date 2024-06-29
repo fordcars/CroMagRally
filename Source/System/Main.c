@@ -14,6 +14,10 @@
 #include "network.h"
 #include <SDL.h>
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 
 /****************************/
 /*    PROTOTYPES            */
@@ -916,7 +920,11 @@ static void PlayArea(void)
 
 	MakeFadeEvent(true);
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 				/******************************************/
 				/* GET CONTROL INFORMATION FOR THIS FRAME */
@@ -1688,7 +1696,11 @@ void GameMain(void)
 
 		/* MAIN LOOP */
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 		PlaySong(SONG_THEME, true);
 		DoMainMenuScreen();

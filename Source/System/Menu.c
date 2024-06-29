@@ -14,6 +14,10 @@
 #include <math.h>
 #include <string.h>
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 #define DECLARE_WORKBUF(buf, bufSize) char (buf)[256]; const int (bufSize) = 256
 #define DECLARE_STATIC_WORKBUF(buf, bufSize) static char (buf)[256]; static const int (bufSize) = 256
 
@@ -2059,7 +2063,11 @@ int StartMenu(
 	CalcFramesPerSecond();
 	ReadKeyboard();
 
+#ifdef __3DS__
+	while (gNav->menuState != kMenuStateOff && ShouldDoMainLoop3ds())
+#else
 	while (gNav->menuState != kMenuStateOff)
+#endif
 	{
 		DoSDLMaintenance();
 

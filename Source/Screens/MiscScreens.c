@@ -14,6 +14,10 @@
 #include "version.h"
 #include <SDL.h>
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 
 /****************************/
 /*    PROTOTYPES            */
@@ -253,7 +257,11 @@ void DoAgeConqueredScreen(void)
 	CalcFramesPerSecond();
 	ReadKeyboard();
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 			/* DRAW STUFF */
 
@@ -434,7 +442,11 @@ float	timer = 0;
 	CalcFramesPerSecond();
 	ReadKeyboard();
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 			/* DRAW STUFF */
 

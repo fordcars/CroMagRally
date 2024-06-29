@@ -14,6 +14,10 @@
 #include "miscscreens.h"
 #include "network.h"
 
+#ifdef __3DS__
+	#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 
 /****************************/
 /*    PROTOTYPES            */
@@ -148,7 +152,11 @@ Boolean DoVehicleSelectScreen(short whichPlayer, Boolean allowAborting)
 	CalcFramesPerSecond();
 	ReadKeyboard();
 
+#ifdef __3DS__
+	while(ShouldDoMainLoop3ds())
+#else
 	while(true)
+#endif
 	{
 			/* SEE IF MAKE SELECTION */
 
