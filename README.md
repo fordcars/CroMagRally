@@ -1,8 +1,8 @@
-# Cro-Mag Rally
+# Cro-Mag Rally 3DS
 
 ## *The wildest racing game since man invented the wheel!*
 
-This is a port of Pangea Software’s racing game **Cro-Mag Rally** to modern operating systems.
+This is a port of Pangea Software’s racing game **Cro-Mag Rally** to the Nintendo 3DS, based off [Jorio's amazing port](https://github.com/jorio/CroMagRally).
 
 **Download the game for macOS, Windows and Linux here:** https://github.com/jorio/CroMagRally/releases
 
@@ -29,7 +29,8 @@ I haven’t had time to restore NetSprockets multiplayer from the OS 9 version y
 
 ### More documentation
 
-- [BUILD](BUILD.md) – How to build the game from source
+- [BUILD_3DS](BUILD_3DS.md) – How to build the game from source for 3DS
+- [BUILD](BUILD.md) – How to build the game from source for Computers
 - [CHANGELOG](CHANGELOG.md) – Cro-Mag Rally version history
 - [LICENSE](LICENSE.md) – Licensing info (see also below)
 - [SECRETS](SECRETS.md) – Cheat codes!

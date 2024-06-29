@@ -50,20 +50,21 @@ CFLAGS	:=	-Wall -O2 -mword-relocations \
 			-ffunction-sections \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -D__3DS__ -DENABLE_LOADING_SCREEN `sdl-config --cflags` -Wno-multichar -Wno-unused-function -Wno-unused-const-variable -Wno-unknown-pragmas
+CFLAGS	+=	$(INCLUDE) -D__3DS__ -DENABLE_LOADING_SCREEN -I/opt/devkitpro/portlibs/3ds/include/SDL2 \
+			-Wno-multichar -Wno-unused-function -Wno-unused-const-variable -Wno-unknown-pragmas
 
 CXXFLAGS	:= $(CFLAGS) -fexceptions
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib `$(PREFIX)pkg-config sdl --libs` -lpicaGL -lctru -lm
+LIBS	:=  -lSDL2main -lSDL2 -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/lib -lPomme -L/home/fcdev/Documents/Github/CroMagRally/extern/Pomme/extern/picaGL/lib -lpicaGL -lctru -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(CTRULIB)
+LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
 
 #---------------------------------------------------------------------------------

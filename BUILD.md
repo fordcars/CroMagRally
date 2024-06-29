@@ -1,4 +1,4 @@
-# How to build Cro-Mag Rally
+# How to build Cro-Mag Rally for Computers
 
 ## The easy way: build.py (automated build script)
 

@@ -452,6 +452,7 @@ short		i;
 
 void PlaySong(short songNum, Boolean loopFlag)
 {
+#ifndef __3DS__
 OSErr 	iErr;
 static	SndCommand 		mySndCmd;
 FSSpec	spec;
@@ -553,6 +554,7 @@ short	musicFileRefNum;
 	iErr = SndDoImmediate(gMusicChannel, &mySndCmd);
 	if (iErr)
 		DoFatalAlert("PlaySong: SndDoImmediate (volumeCmd) failed!");
+#endif
 }
 
 
