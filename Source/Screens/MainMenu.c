@@ -212,7 +212,6 @@ static void UpdateMainMenuScreen(void)
 void DoMainMenuScreen(void)
 {
 do_again:
-printf("MAIN MENU!\n"); // CARL
 	SetupMainMenuScreen();
 
 
@@ -359,7 +358,11 @@ OGLVector3D			fillDirection2 = { -1, -.2, -.5 };
 
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
+#ifdef __3DS__
+	MakeBackgroundPictureObject(":Images:MainMenuBackground3ds.jpg");
+#else
 	MakeBackgroundPictureObject(":Images:MainMenuBackground.jpg");
+#endif
 
 
 	NewObjectDefinitionType versionDef =

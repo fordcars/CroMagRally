@@ -187,7 +187,11 @@ OGLSetupInputType	viewDef;
 
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
+#ifdef __3DS__
+	MakeBackgroundPictureObject(":Images:TrackSelectScreen3ds.png");
+#else
 	MakeBackgroundPictureObject(":Images:TrackSelectScreen.png");
+#endif
 
 			/* LOAD SPRITES */
 

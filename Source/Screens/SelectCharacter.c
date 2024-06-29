@@ -142,7 +142,11 @@ ObjNode	*multiplayerText = NULL;
 
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
+#ifdef __3DS__
+	MakeBackgroundPictureObject(":Images:CharSelectScreen3ds.jpg");
+#else
 	MakeBackgroundPictureObject(":Images:CharSelectScreen.jpg");
+#endif
 
 
 			/* LOAD SPRITES */

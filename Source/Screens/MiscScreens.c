@@ -175,8 +175,11 @@ void ShowLoadingPicture(void)
 {
 #if ENABLE_LOADING_SCREEN
 FSSpec	spec;
-
+#ifdef __3DS__
+	FSMakeFSSpec(gDataSpec.vRefNum, gDataSpec.parID, ":Images:Loading13ds.jpg", &spec);
+#else
 	FSMakeFSSpec(gDataSpec.vRefNum, gDataSpec.parID, ":Images:Loading1.jpg", &spec);
+#endif
 	DisplayPicture(&spec, -1);
 #endif
 }
@@ -190,8 +193,13 @@ FSSpec	spec;
 
 void DoTitleScreen(void)
 {
+#ifdef __3DS__
+	DisplayPicture(":Images:PangeaLogo3ds.jpg", 4.0f);
+	DisplayPicture(":Images:TitleScreen3ds.jpg", 5.0f);
+#else
 	DisplayPicture(":Images:PangeaLogo.jpg", 4.0f);
 	DisplayPicture(":Images:TitleScreen.jpg", 5.0f);
+#endif
 }
 
 
@@ -779,6 +787,10 @@ static const CreditLine lines[] =
 	{1, 4, .text=""},
 	{1, 0, .text="ILIYAS JORIO"},
 	{0, 3, .text=""},
+	{0, 2, .loca=STR_CREDITS_3DS_PORT},
+	{1, 4, .text=""},
+	{1, 0, .text="CARL HEWETT"},
+	{0, 3, .text=""},
 	{0, 2, .loca=STR_CREDITS_SPECIAL_THANKS},
 	{1, 4, .text=""},
 	{1, 0, .text="PASCAL BRULOTTE"},
@@ -837,7 +849,11 @@ static const float sizes[] =
 	viewDef.camera.from[0].z		= 1200;
 	viewDef.camera.from[0].y		= 0;
 	viewDef.view.clearColor 		= (OGLColorRGBA) { 0, 0, 0, 1 };
+#ifdef __3DS__
+	viewDef.view.pillarboxRatio		= PILLARBOX_RATIO_FULLSCREEN;
+#else
 	viewDef.view.pillarboxRatio		= PILLARBOX_RATIO_16_9;
+#endif
 	viewDef.view.fontName			= "wallfont";
 
 	OGL_SetupGameView(&viewDef);
@@ -852,11 +868,15 @@ static const float sizes[] =
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
 
+#ifdef __3DS__
+	ObjNode* artwork = MakeBackgroundPictureObject(":Images:Credits3ds.jpg");
+	UpdateObjectTransforms(artwork);
+#else
 	ObjNode* artwork = MakeBackgroundPictureObject(":Images:Credits.jpg");
-
 	artwork->Scale.x = (4.0/3.0) / viewDef.view.pillarboxRatio;  // hack - preserve aspect ratio of 4:3 picture in 16:9 viewport
 	artwork->Coord.x = -.25f;
 	UpdateObjectTransforms(artwork);
+#endif
 
 
 
@@ -869,7 +889,7 @@ static const float sizes[] =
 	{
 		NewObjectDefinitionType def =
 		{
-			.coord		= {310, y, 0},
+			.coord		= {200, y, 0},
 			.moveCall	= MoveCredit,
 			.scale		= .8 * sizes[lines[i].size],
 			.slot 		= PARTICLE_SLOT-1,		// in this rare case we want to draw text before particles

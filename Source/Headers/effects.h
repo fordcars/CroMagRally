@@ -5,7 +5,11 @@
 #pragma once
 
 #define	MAX_PARTICLE_GROUPS		70
+#ifdef __3DS__
+#define MAX_PARTICLES           80
+#else
 #define	MAX_PARTICLES			250		// (note change Byte below if > 255)
+#endif
 
 
 		/* FIRE & SMOKE */

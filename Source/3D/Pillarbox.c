@@ -202,7 +202,11 @@ void InitPillarbox(void)
 	{
 		if (gPillarboxMaterial == nil)
 		{
+#ifdef __3DS__
+			gPillarboxMaterial = MO_GetTextureFromFile(":Images:Pillarbox3ds.jpg", GL_RGB);
+#else
 			gPillarboxMaterial = MO_GetTextureFromFile(":Images:Pillarbox.jpg", GL_RGB);
+#endif
 		}
 
 		MakePillarboxObject();

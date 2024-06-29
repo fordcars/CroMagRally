@@ -259,7 +259,11 @@ int					age;
 
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
+#ifdef __3DS__
+	MakeBackgroundPictureObject(":Images:VehicleSelectScreen3ds.jpg");
+#else
 	MakeBackgroundPictureObject(":Images:VehicleSelectScreen.jpg");
+#endif
 
 
 			/* LOAD SPRITES */
