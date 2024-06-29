@@ -194,9 +194,9 @@ static void UpdateInputNeeds(void)
 		{
 			case kNeed_ThrowForward:  downNow = downButtons & POMME_3DS_KEY_R; break;
 			case kNeed_ThrowBackward: downNow = downButtons & POMME_3DS_KEY_L; break;
-			case kNeed_Brakes:        downNow = downButtons & POMME_3DS_KEY_Y; break;
+			case kNeed_Brakes:        downNow = downButtons & POMME_3DS_KEY_B; break;
 			case kNeed_Forward:       downNow = downButtons & POMME_3DS_KEY_A; break;
-			case kNeed_Backward:      downNow = downButtons & POMME_3DS_KEY_B; break;
+			case kNeed_Backward:      downNow = downButtons & POMME_3DS_KEY_Y; break;
 			case kNeed_CameraMode:    downNow = downButtons & POMME_3DS_KEY_SELECT; break;
 			case kNeed_RearView:      downNow = downButtons & POMME_3DS_KEY_X; break;
 			case kNeed_Left:          downNow = downButtons & POMME_3DS_KEY_DLEFT; break;
