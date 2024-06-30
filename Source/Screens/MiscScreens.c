@@ -164,9 +164,15 @@ void ShowAgePicture(int age)
 {
 static const char*	names[NUM_AGES] =
 {
+#ifdef __3DS__
+	":Images:Ages:StoneAgeIntro3ds.jpg",
+	":Images:Ages:BronzeAgeIntro3ds.jpg",
+	":Images:Ages:IronAgeIntro3ds.jpg"
+#else
 	":Images:Ages:StoneAgeIntro.jpg",
 	":Images:Ages:BronzeAgeIntro.jpg",
 	":Images:Ages:IronAgeIntro.jpg"
+#endif
 };
 
 	DisplayPicture(names[age], 20);
@@ -296,9 +302,15 @@ FSSpec				spec;
 OGLSetupInputType	viewDef;
 static const char* names[] =
 {
+#ifdef __3DS__
+	":Images:Conquered:StoneAgeConquered3ds.png",
+	":Images:Conquered:BronzeAgeConquered3ds.png",
+	":Images:Conquered:IronAgeConquered3ds.png"
+#else
 	":Images:Conquered:StoneAgeConquered.png",
 	":Images:Conquered:BronzeAgeConquered.png",
 	":Images:Conquered:IronAgeConquered.png"
+#endif
 };
 
 
@@ -505,7 +517,11 @@ OGLSetupInputType	viewDef;
 
 			/* MAKE BACKGROUND PICTURE OBJECT */
 
+#ifdef __3DS__
+	MakeBackgroundPictureObject(":Images:Conquered:GameCompleted3ds.png");
+#else
 	MakeBackgroundPictureObject(":Images:Conquered:GameCompleted.png");
+#endif
 
 
 	LoadASkeleton(SKELETON_TYPE_MALESTANDING);
