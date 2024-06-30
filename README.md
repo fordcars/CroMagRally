@@ -4,9 +4,12 @@
 
 This is a port of Pangea Software’s racing game **Cro-Mag Rally** to the Nintendo 3DS, based off [Jorio's amazing port](https://github.com/jorio/CroMagRally).
 
-**Download the game for macOS, Windows and Linux here:** https://github.com/jorio/CroMagRally/releases
+**Download the game for Nintendo 3DS here:** https://github.com/fordcars/CroMagRally/releases
 
-![Cro-Mag Rally Screenshot](docs/screenshot.webp)
+![Cro-Mag Rally Screenshot](docs/3ds_jungle.png)
+![Cro-Mag Rally Screenshot](docs/3ds_crete.png)
+![Cro-Mag Rally Screenshot](docs/3ds_race.png)
+![Cro-Mag Rally Screenshot](docs/3ds_atlantis.png)
 
 ## About Cro-Mag Rally
 
