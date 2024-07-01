@@ -11,6 +11,17 @@ This is a port of Pangea Software’s racing game **Cro-Mag Rally** to the Ninte
 ![Cro-Mag Rally Screenshot](docs/3ds_race.png)
 ![Cro-Mag Rally Screenshot](docs/3ds_atlantis.png)
 
+## Nintendo 3DS Controls
+* D-Pad: navigate menus
+* A: forward
+* B: reverse
+* X: look behind
+* Y: brake
+* L-Shoulder: throw backwards
+* R-Shoulder: throw forwards
+* Select: change camera
+* Start: pause
+
 ## About Cro-Mag Rally
 
 > In Cro-Mag Rally you are a speed-hungry caveman named Brog who races through the Stone, Bronze, and Iron Ages in primitive vehicles such as the Geode Cruiser, Bone Buggy, Logmobile, Trojan Horse, and many others. Brog has at his disposal an arsenal of primitive weaponry ranging from Bone Bombs to Chinese Bottle Rockets and Heat Seeking Homing Pigeons.
