@@ -109,9 +109,13 @@ static void OnChangeMSAA(const MenuItem* mi)
 const MenuItem gSettingsMenuTree[] =
 {
 	{.id='sett'},
+#ifndef __3DS__
 	{kMIPick, STR_CONTROLS, .next='ctrl'},
+#endif
 	{kMIPick, STR_SOUND, .next='soun'},
+#ifndef __3DS__
 	{kMIPick, STR_GRAPHICS, .next='graf'},
+#endif
 	{kMIPick, STR_LANGUAGE, .next='lang'},
 
 	{.id='ctrl'},
