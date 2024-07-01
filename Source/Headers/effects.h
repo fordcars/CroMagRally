@@ -5,7 +5,7 @@
 #pragma once
 
 #ifdef __3DS__
-#define	MAX_PARTICLE_GROUPS		70
+#define	MAX_PARTICLE_GROUPS		50
 #define MAX_PARTICLES           30
 #else
 #define	MAX_PARTICLE_GROUPS		70
@@ -107,6 +107,7 @@ ObjNode* InitParticleSystem(void);
 
 
 void DeleteAllParticleGroups(void);
+short ForceNewParticleGroup(NewParticleGroupDefType *def);
 short NewParticleGroup(NewParticleGroupDefType *def);
 Boolean AddParticleToGroup(NewParticleDefType *def);
 void MoveParticleGroups(void);

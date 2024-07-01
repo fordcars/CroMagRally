@@ -1538,43 +1538,45 @@ OGLPoint3D			pt;
 	groupDef.particleTextureNum		= PARTICLE_SObjType_WhiteSpark;
 	groupDef.srcBlend				= GL_SRC_ALPHA;
 	groupDef.dstBlend				= GL_ONE;
-	particleGroup 					= NewParticleGroup(&groupDef);
-	if (particleGroup == -1)
-		return;
-
-				/* BUILD PARTICLES */
-
-	particlesPerSegment = MAX_PARTICLES / numSegments;
-
-	for (i = 0; i < (numSegments-1); i++)											// do each segment
+	// Force particle group, we dont really want this to fail (looks weird)
+	particleGroup 					= ForceNewParticleGroup(&groupDef);
+	if (particleGroup != -1)
 	{
-		pt.x = endPoints[i].x;															// get start coord of segment
-		pt.y = endPoints[i].y;
-		pt.z = endPoints[i].z;
 
-		boltVector.x = (endPoints[i+1].x - pt.x) / particlesPerSegment;				// calc vector to next endpoint
-		boltVector.y = (endPoints[i+1].y - pt.y) / particlesPerSegment;
-		boltVector.z = (endPoints[i+1].z - pt.z) / particlesPerSegment;
+					/* BUILD PARTICLES */
 
-		for (p = 0; p < particlesPerSegment; p++)
+		particlesPerSegment = MAX_PARTICLES / numSegments;
+
+		for (i = 0; i < (numSegments-1); i++)											// do each segment
 		{
-			d.x = RandomFloat2() * 20.0f;
-			d.y = RandomFloat2() * 20.0f;
-			d.z = RandomFloat2() * 20.0f;
+			pt.x = endPoints[i].x;															// get start coord of segment
+			pt.y = endPoints[i].y;
+			pt.z = endPoints[i].z;
+
+			boltVector.x = (endPoints[i+1].x - pt.x) / particlesPerSegment;				// calc vector to next endpoint
+			boltVector.y = (endPoints[i+1].y - pt.y) / particlesPerSegment;
+			boltVector.z = (endPoints[i+1].z - pt.z) / particlesPerSegment;
+
+			for (p = 0; p < particlesPerSegment; p++)
+			{
+				d.x = RandomFloat2() * 20.0f;
+				d.y = RandomFloat2() * 20.0f;
+				d.z = RandomFloat2() * 20.0f;
 
 
-			newParticleDef.groupNum		= particleGroup;
-			newParticleDef.where		= &pt;
-			newParticleDef.delta		= &d;
-			newParticleDef.scale		= RandomFloat() + 1.0f;
-			newParticleDef.rotZ			= 0;
-			newParticleDef.rotDZ		= 0;
-			newParticleDef.alpha		= 1.0;
-			AddParticleToGroup(&newParticleDef);
+				newParticleDef.groupNum		= particleGroup;
+				newParticleDef.where		= &pt;
+				newParticleDef.delta		= &d;
+				newParticleDef.scale		= RandomFloat() + 1.0f;
+				newParticleDef.rotZ			= 0;
+				newParticleDef.rotDZ		= 0;
+				newParticleDef.alpha		= 1.0;
+				AddParticleToGroup(&newParticleDef);
 
-			pt.x += boltVector.x;
-			pt.y += boltVector.y;
-			pt.z += boltVector.z;
+				pt.x += boltVector.x;
+				pt.y += boltVector.y;
+				pt.z += boltVector.z;
+			}
 		}
 	}
 

@@ -215,15 +215,8 @@ static void DeleteParticleGroup(long groupNum)
 
 #pragma mark -
 
-
 /********************** NEW PARTICLE GROUP *************************/
-//
-// INPUT:	type 	=	group type to create
-//
-// OUTPUT:	group ID#
-//
-
-short NewParticleGroup(NewParticleGroupDefType *def)
+static inline short InternalNewParticleGroup(NewParticleGroupDefType *def, bool force)
 {
 short					p,i,j,k;
 OGLTextureCoord			*uv;
@@ -233,6 +226,17 @@ MOTriangleIndecies		*t;
 			/*************************/
 			/* SCAN FOR A FREE GROUP */
 			/*************************/
+
+	if(gNumActiveParticleGroups == MAX_PARTICLE_GROUPS)
+	{
+		if(force)
+		{
+			// Delete random particle group and replace
+			i = RandomRange(0, MAX_PARTICLE_GROUPS - 1);
+			DeleteParticleGroup(i);
+		}
+		else return -1;
+	}
 
 	for (i = 0; i < MAX_PARTICLE_GROUPS; i++)
 	{
@@ -335,6 +339,31 @@ MOTriangleIndecies		*t;
 
 //	DoFatalAlert("NewParticleGroup: no free groups!");
 	return(-1);
+}
+
+/********************** FORC NEW PARTICLE GROUP *************************/
+//
+// INPUT:	type 	=	group type to create
+//
+// OUTPUT:	group ID#
+//
+// Will delete and replace another particle group if all slots are taken.
+
+short ForceNewParticleGroup(NewParticleGroupDefType *def)
+{
+	return InternalNewParticleGroup(def, true);
+}
+
+/********************** NEW PARTICLE GROUP *************************/
+//
+// INPUT:	type 	=	group type to create
+//
+// OUTPUT:	group ID#
+//
+
+short NewParticleGroup(NewParticleGroupDefType *def)
+{
+	return InternalNewParticleGroup(def, false);
 }
 
 
