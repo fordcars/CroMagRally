@@ -855,7 +855,7 @@ const MOPictureData	*picData = &picObj->objectData;
 
 #ifdef __3DS__
 	// 3ds pictures are 512x512, so bring back to 4:3 (512x384)
-	glBegin(GL_QUADS);
+	glBegin(GL_TRIANGLE_FAN);
 	glTexCoord2f(1, 384.0f/512.0f);	glVertex3f(-1, -1, z);
 	glTexCoord2f(1, 0);	glVertex3f( 1, -1, z);
 	glTexCoord2f(0, 0);	glVertex3f( 1, 1, z);

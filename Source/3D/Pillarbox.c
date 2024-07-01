@@ -19,9 +19,6 @@ void DisposePillarboxMaterial(void)
 
 static void DrawPillarbox(ObjNode* objNode)
 {
-#ifdef __3DS__
-	return; // CARL: TODO
-#endif
 	// Get dimensions of 0th viewport
 	int vpw = gGameView->panes[0].vpw;
 	int vph = gGameView->panes[0].vph;
@@ -67,7 +64,13 @@ static void DrawPillarbox(ObjNode* objNode)
 		{
 			// padding stripe is narrower than texture -- keep height, crop sides
 			tcB = 1;
+#ifdef __3DS__
+			// 3ds pictures are 512x512, so bring back to 4:3 (512x384).
+			// Also flip 180 degrees to match desktop version.
+			tcT = 1.0f - 384.0f/512.0f;
+#else
 			tcT = 0;
+#endif
 			tcL1 = .5f;
 			tcR1 = .5f + .5f * (stripeAR / texRegionAR);
 			tcL2 = .5f - .5f * (stripeAR / texRegionAR);
@@ -85,6 +88,22 @@ static void DrawPillarbox(ObjNode* objNode)
 		}
 
 		glColor4f(gPillarboxBrightness, gPillarboxBrightness, gPillarboxBrightness, 1);
+#ifdef __3DS__
+		// No GL_QUADS support on 3DS
+		glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(tcL1, tcB);		glVertex3f(qB, -qL1, z);		// Quad 1 (right)
+		glTexCoord2f(tcR1, tcB);		glVertex3f(qB, -qR1, z);
+		glTexCoord2f(tcR1, tcT);		glVertex3f(qT, -qR1, z);
+		glTexCoord2f(tcL1, tcT);		glVertex3f(qT, -qL1, z);
+		glEnd();
+
+		glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(tcL1, tcB);		glVertex3f(qB, -qL2, z);		// Quad 1 (right)
+		glTexCoord2f(tcR1, tcB);		glVertex3f(qB, -qR2, z);
+		glTexCoord2f(tcR1, tcT);		glVertex3f(qT, -qR2, z);
+		glTexCoord2f(tcL1, tcT);		glVertex3f(qT, -qL2, z);
+		glEnd();
+#else
 		glBegin(GL_QUADS);
 		glTexCoord2f(tcL1, tcB);		glVertex3f(qL1, qB, z);		// Quad 1 (right)
 		glTexCoord2f(tcR1, tcB);		glVertex3f(qR1, qB, z);
@@ -95,7 +114,30 @@ static void DrawPillarbox(ObjNode* objNode)
 		glTexCoord2f(tcR2, tcT);		glVertex3f(qR2, qT, z);
 		glTexCoord2f(tcL2, tcT);		glVertex3f(qL2, qT, z);
 		glEnd();
+#endif
 
+#ifdef __3DS__
+		// No GL_QUADS support on 3DS
+		glEnable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
+
+		glBegin(GL_TRIANGLE_FAN);
+		glColor4f(0,0,0,shadowOpacity);
+		glVertex3f(qT, -qL1, z);		// Quad 1 (right)
+		glVertex3f(qB, -qL1, z);
+		glColor4f(0,0,0,0);
+		glVertex3f(qB, -qR3, z);
+		glVertex3f(qT, -qR3, z);
+		glEnd();
+
+		glBegin(GL_TRIANGLE_FAN);
+		glVertex3f(qT, -qL3, z);		// Quad 2 (left)
+		glVertex3f(qB, -qL3, z);
+		glColor4f(0,0,0,shadowOpacity);
+		glVertex3f(qB, -qR2, z);
+		glVertex3f(qT, -qR2, z);
+		glEnd();
+#else
 		glEnable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
@@ -111,6 +153,7 @@ static void DrawPillarbox(ObjNode* objNode)
 		glVertex3f(qR2, qB, z);
 		glVertex3f(qR2, qT, z);
 		glEnd();
+#endif
 	}
 	else // tallscreen
 	{
