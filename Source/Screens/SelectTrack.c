@@ -67,7 +67,11 @@ enum
 
 #define	LEVEL_IMAGE_X		0
 #define	LEVEL_IMAGE_Y		-5
+#ifdef __3DS__
+#define	LEVEL_IMAGE_SCALE	2.32
+#else
 #define	LEVEL_IMAGE_SCALE	.58
+#endif
 
 #define	NUM_PRACTICE_TRACKS		9
 #define	NUM_BATTLE_TRACKS		8
@@ -197,11 +201,23 @@ OGLSetupInputType	viewDef;
 
 #ifdef __3DS__
 	MakeBackgroundPictureObject(":Images:TrackSelectScreen3ds.png");
+
+	switch(gGameMode)
+	{
+		case	GAME_MODE_PRACTICE:
+		case	GAME_MODE_MULTIPLAYERRACE:
+				gNumTracksInSelection = NUM_PRACTICE_TRACKS;
+				gBaseTrack = 0;
+				LoadSpriteGroup(SPRITE_GROUP_TRACKSELECTSCREEN, "trackselectsp3ds", 0);
+				break;
+
+		default:
+				gNumTracksInSelection = NUM_BATTLE_TRACKS;
+				gBaseTrack = 9;
+				LoadSpriteGroup(SPRITE_GROUP_TRACKSELECTSCREEN, "trackselectmp3ds", 0);
+	}
 #else
 	MakeBackgroundPictureObject(":Images:TrackSelectScreen.png");
-#endif
-
-			/* LOAD SPRITES */
 
 	switch(gGameMode)
 	{
@@ -217,6 +233,9 @@ OGLSetupInputType	viewDef;
 				gBaseTrack = 9;
 				LoadSpriteGroup(SPRITE_GROUP_TRACKSELECTSCREEN, "trackselectmp", 0);
 	}
+#endif
+
+			/* LOAD SPRITES */
 
 	LoadSpriteGroup(SPRITE_GROUP_MAINMENU, "menus", 0);
 
