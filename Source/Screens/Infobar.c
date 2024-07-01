@@ -60,7 +60,7 @@ static void MovePressAnyKey(ObjNode *theNode);
 #ifdef __3DS__
 #define MAP_X_3DS 0
 #define MAP_Y_3DS 0
-#define MAP_SCALE_3DS 1.2
+#define MAP_SCALE_3DS 1.7
 #endif
 
 enum

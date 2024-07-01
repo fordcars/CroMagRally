@@ -920,6 +920,15 @@ static const float sizes[] =
 	float y = 1.2 * 240.0f;
 	for (int i = 0; lines[i].color != -1; i++)
 	{
+#ifdef __3DS__
+		NewObjectDefinitionType def =
+		{
+			.coord		= {275, y, 0},
+			.moveCall	= MoveCredit,
+			.scale		= .8 * sizes[lines[i].size],
+			.slot 		= PARTICLE_SLOT-1,		// in this rare case we want to draw text before particles
+		};
+#else
 		NewObjectDefinitionType def =
 		{
 			.coord		= {200, y, 0},
@@ -927,6 +936,7 @@ static const float sizes[] =
 			.scale		= .8 * sizes[lines[i].size],
 			.slot 		= PARTICLE_SLOT-1,		// in this rare case we want to draw text before particles
 		};
+#endif
 
 		const char* text;
 		if (lines[i].loca != STR_NULL)
@@ -947,8 +957,22 @@ static const float sizes[] =
 		y += def.scale * .275f * 240.0f;
 	}
 
+#ifdef __3DS__
+	NewObjectDefinitionType def =
+	{
+		.slot = PARTICLE_SLOT-2,
+		.scale = 1,
+		.group = SPRITE_GROUP_INFOBAR,
+		.type = INFOBAR_SObjType_OverlayBackgroundH,
+		.coord = {285,0,0},
+	};
 
-
+	ObjNode* pane = MakeSpriteObject(&def);
+	pane->ColorFilter = (OGLColorRGBA) {0, 0, 0, 1};
+	pane->Scale.x = 2.2f;
+	pane->Scale.y = 250;
+	UpdateObjectTransforms(pane);
+#else
 	NewObjectDefinitionType def =
 	{
 		.slot = PARTICLE_SLOT-2,
@@ -963,6 +987,7 @@ static const float sizes[] =
 	pane->Scale.x = 1.0f;
 	pane->Scale.y = 250;
 	UpdateObjectTransforms(pane);
+#endif
 }
 
 
