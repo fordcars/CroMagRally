@@ -329,7 +329,7 @@ void OGL_SetupGameView(OGLSetupInputType *setupDefPtr)
 
 			/* PRIME PILLARBOX */
 
-	InitPillarbox();
+	InitPillarbox(false);
 }
 
 

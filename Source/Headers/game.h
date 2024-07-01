@@ -173,3 +173,4 @@ extern uint16_t					**gTileGrid;
 extern uint32_t					gAutoFadeStatusBits;
 extern uint32_t					gGlobalMaterialFlags;
 extern uint32_t					gInfobarUpdateBits;
+extern MOMaterialObject*	    gPillarboxMaterial;

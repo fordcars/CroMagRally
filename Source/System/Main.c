@@ -1000,7 +1000,10 @@ static void PlayArea(void)
 			/***************/
 
 		OGL_DrawScene(DrawTerrain);
-
+#ifdef __3DS__
+		// Draw map on lower screen
+		DrawMap(0);
+#endif
 
 
 
@@ -1674,6 +1677,10 @@ void GameMain(void)
 		{
 			gPlayerInfo[0].vehicleType = gCommandLine.car - 1;
 		}
+
+#ifdef __3DS__
+		InitPillarbox(true);
+#endif
 
 		InitArea();
 		PlayArea();

@@ -14,3 +14,4 @@ void ShowFinalPlace(short playerNum, int rankInScoreboard);
 void DecCurrentPOWQuantity(short playerNum);
 void ShowWinLose(short playerNum, Byte mode, short winner);
 void MakeIntroTrackName(void);
+void DrawMap(Byte whichPane);

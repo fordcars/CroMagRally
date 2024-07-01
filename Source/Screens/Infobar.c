@@ -13,6 +13,10 @@
 #include "game.h"
 #include <stddef.h>
 
+#ifdef __3DS__
+#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 /****************************/
 /*    PROTOTYPES            */
 /****************************/
@@ -20,7 +24,6 @@
 static void MakeInfobar(void);
 static void DrawInfobar(ObjNode* theNode);
 
-static void Infobar_DrawMap(Byte whichPane);
 static void Infobar_MovePlace(ObjNode* objNode);
 static void Infobar_MoveInventoryPOW(ObjNode* objNode);
 static void Infobar_MoveWrongWay(ObjNode* objNode);
@@ -53,6 +56,12 @@ static void MovePressAnyKey(ObjNode *theNode);
 #define MAX_SUBICONS				12
 
 #define MAX_POWTIMERS 6
+
+#ifdef __3DS__
+#define MAP_X_3DS 0
+#define MAP_Y_3DS 0
+#define MAP_SCALE_3DS 1.2
+#endif
 
 enum
 {
@@ -596,7 +605,7 @@ static void MakeInfobar(void)
 		Infobar_MakeIcon(ICON_POWTIMER, 0x80 | (i*2 + 1));	// text
 	}
 
-	//Infobar_DrawMap();
+	//DrawMap();
 	//Infobar_DrawStartingLight();
 
 	/* DRAW GAME MODE SPECIFICS */
@@ -662,7 +671,10 @@ static void DrawInfobar(ObjNode* theNode)
 
 		/* DRAW THE STANDARD THINGS */
 
-	Infobar_DrawMap(gCurrentSplitScreenPane);
+#ifndef __3DS__
+	// We draw the map later (bottom screen)
+	DrawMap(gCurrentSplitScreenPane);
+#endif
 	Infobar_DrawStartingLight(gCurrentSplitScreenPane);
 
 
@@ -690,7 +702,11 @@ static void GetPointOnOverheadMap(Byte whichPane, float* px, float* pz)
 	float x = *px;
 	float z = *pz;
 
+#ifdef __3DS__
+	float scale = MAP_SCALE_3DS;
+#else
 	float scale = GetIconScale(ICON_MAP);
+#endif
 
 	x /= gTerrainUnitWidth;		// get 0..1 coordinate values
 	z /= gTerrainUnitDepth;
@@ -701,14 +717,19 @@ static void GetPointOnOverheadMap(Byte whichPane, float* px, float* pz)
 	x *= scale * OVERHEAD_MAP_REFERENCE_SIZE * .5f;		// shrink to size of underlay map
 	z *= scale * OVERHEAD_MAP_REFERENCE_SIZE * .5f;
 
+#ifdef __3DS__
+	x += MAP_X_3DS;
+	z += MAP_Y_3DS;
+#else
 	x += GetIconX(whichPane, ICON_MAP);							// position it
 	z += GetIconY(whichPane, ICON_MAP);
+#endif
 
 	*px = x;
 	*pz = z;
 }
 
-static void Infobar_DrawMap(Byte whichPane)
+void DrawMap(Byte whichPane)
 {
 	short	p = GetPlayerNum(whichPane);
 
@@ -731,11 +752,47 @@ static void Infobar_DrawMap(Byte whichPane)
 
 			/* DRAW THE MAP UNDERLAY */
 
+#ifdef __3DS__
+	OGL_PushState();
+	SelectTopScreen3ds(false);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
+	// Draw backdrop
+	MO_DrawMaterial(gPillarboxMaterial);
+	glColor4f(0.3f, 0.3f, 0.3f, 1.0f);
+
+    glMatrixMode(GL_PROJECTION_MATRIX);
+    glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW_MATRIX);
+    glLoadIdentity();
+    glPushMatrix();
+
+	// 3ds pictures are 512x512, so bring back to 4:3 (512x384)
+	glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(1, 1);	glVertex3f(-1, -1, 0);
+		glTexCoord2f(1, 1-384.0f/512.0f);	glVertex3f( 1, -1, 0);
+		glTexCoord2f(0, 1-384.0f/512.0f);	glVertex3f( 1, 1, 0);
+		glTexCoord2f(0, 1);	glVertex3f(-1,  1, 0);
+	glEnd();
+
+	// Draw map
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	DrawSprite(SPRITE_GROUP_OVERHEADMAP, 1,
+			MAP_X_3DS,
+			MAP_Y_3DS,
+			MAP_SCALE_3DS * gMapFit,
+			0);
+#else
 	DrawSprite(SPRITE_GROUP_OVERHEADMAP, 1,
 			GetIconX(whichPane, ICON_MAP),
 			GetIconY(whichPane, ICON_MAP),
 			scale * gMapFit,
 			INFOBAR_SPRITE_FLAGS);
+#endif
 
 
 			/***********************/
@@ -760,7 +817,11 @@ static void Infobar_DrawMap(Byte whichPane)
 
 		float scaleBasis = ((i == p) ? 10 : 7);				// draw my marker bigger
 		scaleBasis *= scale;
+#ifdef __3DS__
+		scaleBasis *= .3f;
+#else
 		scaleBasis *= .1f;
+#endif
 
 		float rot = PI - gPlayerInfo[i].objNode->Rot.y;		// "pi minus angle" because Y points down for us
 
@@ -780,7 +841,17 @@ static void Infobar_DrawMap(Byte whichPane)
 					gGlobalColorFilter = kCavemanSkinColors[gPlayerInfo[i].skin];
 		}
 
-		
+#ifdef __3DS__
+		DrawSprite2(
+			SPRITE_GROUP_INFOBAR,
+			INFOBAR_SObjType_PlayerBlip,
+			x,
+			z,
+			scaleBasis,
+			scaleBasis,
+			rot,
+			0);
+#else
 		DrawSprite2(
 			SPRITE_GROUP_INFOBAR,
 			INFOBAR_SObjType_PlayerBlip,
@@ -790,6 +861,7 @@ static void Infobar_DrawMap(Byte whichPane)
 			scaleBasis,
 			rot,
 			INFOBAR_SPRITE_FLAGS);
+#endif
 	}
 
 	gGlobalColorFilter = (OGLColorRGB) {1,1,1};
@@ -825,6 +897,17 @@ static void Infobar_DrawMap(Byte whichPane)
 			x, z, scaleBasis,
 			INFOBAR_SPRITE_FLAGS);
 	}
+
+#ifdef __3DS__
+    SwapBuffers3ds();
+	SelectTopScreen3ds(true);
+
+    glMatrixMode(GL_PROJECTION_MATRIX);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW_MATRIX);
+    glPopMatrix();
+	OGL_PopState();
+#endif
 }
 
 

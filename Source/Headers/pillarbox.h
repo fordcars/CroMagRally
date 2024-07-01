@@ -2,5 +2,5 @@
 
 #include "structs.h"
 
-void InitPillarbox(void);
+void InitPillarbox(bool forceLoad);
 void DisposePillarboxMaterial(void);

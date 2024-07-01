@@ -5,7 +5,7 @@
 
 #include "game.h"
 
-static MOMaterialObject*	gPillarboxMaterial = nil;
+MOMaterialObject*	gPillarboxMaterial = nil;
 static float				gPillarboxBrightness = 0;
 
 void DisposePillarboxMaterial(void)
@@ -239,9 +239,9 @@ static ObjNode* MakePillarboxObject(void)
 	return MakeNewObject(&def);
 }
 
-void InitPillarbox(void)
+void InitPillarbox(bool forceLoad)
 {
-	if (gGameView->pillarboxRatio > 0)
+	if (forceLoad || gGameView->pillarboxRatio > 0)
 	{
 		if (gPillarboxMaterial == nil)
 		{

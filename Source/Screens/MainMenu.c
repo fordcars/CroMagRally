@@ -18,6 +18,10 @@
 
 #include <SDL.h>
 
+#ifdef __3DS__
+#include "Platform/3ds/Pomme3ds.h"
+#endif
+
 /****************************/
 /*    PROTOTYPES            */
 /****************************/
@@ -65,17 +69,23 @@ enum
 static const MenuItem gMainMenuTree[] =
 {
 	{ .id='titl' },
+#ifdef __3DS__
+	{kMIPick, STR_NEW_GAME,		.next='spgm', },
+#else
 	{kMIPick, STR_NEW_GAME,		.next='play', },
+#endif
 	{kMIPick, STR_OPTIONS,		.next='optn', },
 	{kMIPick, STR_EXTRAS,		.next='xtra', },
 	{kMIPick, STR_QUIT,			.next='EXIT', .callback=OnPickQuitApplication, .id=MENU_EXITCODE_QUITGAME },
 
+#ifndef __3DS__
 	{ .id='play' },
 	{kMIPick, STR_1PLAYER,	.id=1, .callback=OnConfirmPlayMenu, .next='spgm' },
 	{kMIPick, STR_2PLAYER,	.id=2, .callback=OnConfirmPlayMenu, .next='mpgm' },
 	{kMIPick, STR_3PLAYER,	.id=3, .callback=OnConfirmPlayMenu, .next='mpgm' },
 	{kMIPick, STR_4PLAYER,	.id=4, .callback=OnConfirmPlayMenu, .next='mpgm' },
 //	{kMIPick, STR_NET_GAME,	.id=0, .callback=OnConfirmPlayMenu, .next='netg' },
+#endif
 
 	{ .id='optn' },
 	{
@@ -208,10 +218,52 @@ static void UpdateMainMenuScreen(void)
 	}
 }
 
+#ifdef __3DS__
+// Only render once, we never clear this buffer anyway
+static void SetupLowerScreen3ds(void)
+{
+	OGL_PushState();
+	SelectTopScreen3ds(false);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+
+	// Draw backdrop
+	MO_DrawMaterial(gPillarboxMaterial);
+	glColor4f(0.3f, 0.3f, 0.3f, 1.0f);
+
+    glMatrixMode(GL_PROJECTION_MATRIX);
+    glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW_MATRIX);
+    glLoadIdentity();
+    glPushMatrix();
+
+	// 3ds pictures are 512x512, so bring back to 4:3 (512x384)
+	glBegin(GL_TRIANGLE_FAN);
+		glTexCoord2f(1, 1);	glVertex3f(-1, -1, 0);
+		glTexCoord2f(1, 1-384.0f/512.0f);	glVertex3f( 1, -1, 0);
+		glTexCoord2f(0, 1-384.0f/512.0f);	glVertex3f( 1, 1, 0);
+		glTexCoord2f(0, 1);	glVertex3f(-1,  1, 0);
+	glEnd();
+
+    SwapBuffers3ds();
+	SelectTopScreen3ds(true);
+
+    glMatrixMode(GL_PROJECTION_MATRIX);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW_MATRIX);
+    glPopMatrix();
+	OGL_PopState();
+}
+#endif
+
 
 void DoMainMenuScreen(void)
 {
 do_again:
+	SetupLowerScreen3ds();
 	SetupMainMenuScreen();
 
 

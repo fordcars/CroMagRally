@@ -928,7 +928,12 @@ static const char*	levelModelFiles[NUM_TRACKS] =
 			/* DISPOSE MENU ASSETS THAT WE DON'T NEED IN-GAME */
 
 	DisposeSpriteGroup(SPRITE_GROUP_MAINMENU);
+
+	// On 3ds, we use the pillarbox material as a backdrop
+	// to the map on the bottom screen.
+#ifndef __3DS__
 	DisposePillarboxMaterial();
+#endif
 
 			/* LOAD SPRITES */
 
