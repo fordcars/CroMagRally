@@ -1517,8 +1517,21 @@ static void OGL_UpdatePaneDimensions(Byte whichPane)
 
 void OGL_SetProjection(int projectionType)
 {
+#ifdef __3DS__
+	// Handle bottom screen
 	float lw = gGameView->panes[gCurrentSplitScreenPane].logicalWidth;
 	float lh = gGameView->panes[gCurrentSplitScreenPane].logicalHeight;
+	if(!IsTopScreenSelected3ds())
+	{
+		// Lower screen is 4:3. Logical width depends on logical
+		// height and aspect ratio (see OGL_UpdatePaneLogicalSize).
+		lw = gGameView->panes[gCurrentSplitScreenPane].logicalHeight * (320.0f/240.0f);
+		lh = gGameView->panes[gCurrentSplitScreenPane].logicalHeight;
+	}
+#else
+	float lw = gGameView->panes[gCurrentSplitScreenPane].logicalWidth;
+	float lh = gGameView->panes[gCurrentSplitScreenPane].logicalHeight;
+#endif
 
 	switch (projectionType)
 	{

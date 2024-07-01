@@ -1137,7 +1137,10 @@ void MoveEverything(void)
 	{
 		case	TRACK_NUM_ICE:
 		case	TRACK_NUM_RAMPS:
+		// Snow makes the 3DS lag quite a bit
+#ifndef __3DS__
 				MakeSnow();
+#endif
 				break;
 
 	}

@@ -25,7 +25,6 @@ static void DeleteParticleGroup(long groupNum);
 static void MoveShockwave(ObjNode *theNode);
 static void MoveConeBlast(ObjNode *theNode);
 
-static void MakeSnowParticleGroup(void);
 static void DrawParticleGroup(ObjNode *theNode);
 static void MoveSnowShockwave(ObjNode *theNode);
 
