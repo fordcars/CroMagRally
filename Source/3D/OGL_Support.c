@@ -449,10 +449,7 @@ OGLStyleDefType *styleDefPtr = &setupDefPtr->styles;
 	glFrontFace(GL_CCW);									// CCW is front face
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		// set default blend func
-#ifndef __3DS__
-	// CARL TODO: fix for 3DS
 	glDisable(GL_BLEND);									// but turn it off by default
-#endif
 
 	glDisable(GL_RESCALE_NORMAL);
 
@@ -1260,21 +1257,10 @@ int	i;
 	gStateStack_Blend[i] 	= glIsEnabled(GL_BLEND);
 	gStateStack_ProjectionType[i] = gMyState_ProjectionType;
 
-// CARL TODO: May cause graphical glitches on 3DS, to verify.
-#ifndef __3DS__
 	glGetFloatv(GL_CURRENT_COLOR, &gStateStack_Color[i][0]);
-#endif
-
 	glGetIntegerv(GL_BLEND_SRC, &gStateStack_BlendSrc[i]);
 	glGetIntegerv(GL_BLEND_DST, &gStateStack_BlendDst[i]);
-
-#ifndef __3DS__
 	glGetBooleanv(GL_DEPTH_WRITEMASK, &gStateStack_DepthMask[i]);
-#else
-	// We don't have a way of getting current depth mask in 3DS,
-	// so set to true to avoid deth test issues.
-	gStateStack_DepthMask[i] = GL_TRUE;
-#endif
 }
 
 
@@ -1309,15 +1295,10 @@ int		i;
 	else
 		glDisable(GL_CULL_FACE);
 
-// CARL TODO: PicaGL doesn't support glIsEnabled on GL_DEPTH_TEST.
-// We should simply update PicaGL, but I'm too lazy rn.
-// This is a quick fix to avoid depth test issues.
-#ifndef __3DS__
 	if (gStateStack_DepthTest[i])
 		glEnable(GL_DEPTH_TEST);
 	else
 		glDisable(GL_DEPTH_TEST);
-#endif
 
 	if (gStateStack_Normalize[i])
 		glEnable(GL_NORMALIZE);
@@ -1329,13 +1310,10 @@ int		i;
 	else
 		glDisable(GL_TEXTURE_2D);
 
-#ifndef __3DS__
-	// CARL TODO: fix for 3DS
 	if (gStateStack_Blend[i])
 		glEnable(GL_BLEND);
 	else
 		glDisable(GL_BLEND);
-#endif
 
 	if (gStateStack_Fog[i])
 		glEnable(GL_FOG);

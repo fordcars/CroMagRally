@@ -593,10 +593,7 @@ OGLBoundingBox	bbox;
 
 	OGL_PushState();
 
-#ifndef __3DS__
-	// CARL TODO: fix for 3DS
 	glEnable(GL_BLEND);
-#endif
 	glColor4f(1,1,1,1);										// full white & alpha to start with
 
 	camCoords = &gGameView->cameraPlacement[gCurrentSplitScreenPane].cameraLocation;

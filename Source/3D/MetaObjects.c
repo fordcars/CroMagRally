@@ -806,12 +806,10 @@ uint32_t				matFlags;
 
 		/* SEE IF NEED TO ENABLE BLENDING */
 
-#ifndef __3DS__ // CARL TODO: fix this for 3DS
 	if (textureHasAlpha || (diffColor2.a != 1.0f) || (matFlags & BG3D_MATERIALFLAG_ALWAYSBLEND))		// if has alpha, then we need blending on
 	    glEnable(GL_BLEND);
 	else
 	    glDisable(GL_BLEND);
-#endif
 
 
 			/* SAVE THIS STUFF */
