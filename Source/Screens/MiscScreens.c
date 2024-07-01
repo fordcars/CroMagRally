@@ -114,12 +114,19 @@ bool				doKeyText = timeout > 9;
 
 	if (showAndBail)
 	{
-		int	i;
+		float fadeInTimeout = 1.0f;
+		MakeFadeEvent(true);
+		CalcFramesPerSecond();
 
-		for (i = 0; i < 10; i++)
+		// Do fade-in
+		while (fadeInTimeout > 0)
+		{
+			CalcFramesPerSecond();
+			MoveObjects();
 			OGL_DrawScene(DrawObjects);
 
-		// TODO: Fade in, I guess?
+			fadeInTimeout -= gFramesPerSecondFrac;
+		}
 	}
 	else
 	{
