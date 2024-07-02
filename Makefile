@@ -39,6 +39,7 @@ INCLUDES	:=	Source/Headers extern extern/Pomme/src extern/Pomme/extern/picaGL/in
 GRAPHICS	:=	gfx
 GFXBUILD	:=	$(BUILD)
 ROMFS		:=	Data
+ICON        := Packaging/CroMagRally.png
 #GFXBUILD	:=	$(ROMFS)/gfx
 
 #---------------------------------------------------------------------------------

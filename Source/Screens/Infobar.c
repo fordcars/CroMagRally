@@ -755,8 +755,6 @@ void DrawMap(Byte whichPane)
 #ifdef __3DS__
 	OGL_PushState();
 	SelectTopScreen3ds(false);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 
