@@ -30,7 +30,11 @@ static float RotateCameraRingTowardTarget(float rot, OGLVector2D *carToNewCamVec
 #define	NUM_FLARE_TYPES		4
 #define	NUM_FLARES			6
 
-#define	CAMERA_LOOKAT_YOFF		300.0f
+#ifdef __3DS__
+	#define	CAMERA_LOOKAT_YOFF		250.0f
+#else
+	#define	CAMERA_LOOKAT_YOFF		300.0f
+#endif
 
 
 /*********************/

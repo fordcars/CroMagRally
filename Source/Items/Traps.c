@@ -46,7 +46,11 @@ static void MoveTroll(ObjNode *theNode);
 /*    CONSTANTS             */
 /****************************/
 
-#define	DUST_TIMER	.04f
+#ifdef __3DS__
+	#define	DUST_TIMER	.1f
+#else
+	#define	DUST_TIMER	.04f
+#endif
 
 #define	YETI_SCALE	7.0f
 #define	YETI_YOFF	(50.0f * YETI_SCALE)

@@ -7,7 +7,11 @@
 #define	MAX_PLAYERS			6
 #define	MAX_LOCAL_PLAYERS	4
 
-#define	GAME_FOV		1.1f
+#ifdef __3DS__
+	#define	GAME_FOV		0.85f
+#else
+	#define	GAME_FOV		1.1f
+#endif
 
 #define	TRACK_COMPLETE_COOLDOWN_TIME	7.0f//5.0				// n seconds
 

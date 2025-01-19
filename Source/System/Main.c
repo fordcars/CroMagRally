@@ -1239,7 +1239,11 @@ short				numPanes;
 	OGL_NewViewDef(&viewDef);
 
 	viewDef.camera.hither 			= 50;
+#ifdef __3DS__
+	viewDef.camera.yon 				= 20000;
+#else
 	viewDef.camera.yon 				= (SUPERTILE_ACTIVE_RANGE * SUPERTILE_SIZE * TERRAIN_POLYGON_SIZE);
+#endif
 	viewDef.camera.fov 				= GAME_FOV;
 
 	viewDef.view.clearColor.r 		= 0;

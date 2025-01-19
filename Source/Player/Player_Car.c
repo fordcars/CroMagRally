@@ -51,7 +51,11 @@ static void UpdateFlaming(short p);
 
 #define	TAG_SPAZ_TIMER			3.0f			// car cannot be re-tagged for n seconds
 
-#define	SKID_SMOKE_TIMER				.05f;
+#ifdef __3DS__
+	#define	SKID_SMOKE_TIMER				.1f;
+#else
+	#define	SKID_SMOKE_TIMER				.05f;
+#endif
 
 #define	PLACE_SPEED_TWEAK				170.0f
 #define	PLACE_SPEED_TWEAK_CPU			200.0f
@@ -3383,7 +3387,11 @@ static const OGLPoint3D	headOffsets[NUM_LAND_CAR_TYPES] =
 				gPlayerInfo[playerNum].dragDebrisTimer -= fps;									// check timer to see if can spew debris from wheels
 				if (gPlayerInfo[playerNum].dragDebrisTimer <= 0.0f)
 				{
+#ifdef __3DS__
+					gPlayerInfo[playerNum].dragDebrisTimer += .1f;
+#else
 					gPlayerInfo[playerNum].dragDebrisTimer += .03f;
+#endif
 					debris = true;
 				}
 			}
